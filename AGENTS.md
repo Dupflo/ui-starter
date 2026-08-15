@@ -62,7 +62,25 @@ All pipeline data lives in markdown files under docs/, versioned by git. No data
 - Decisions — docs/decisions/NNN-<slug>.md (MADR format, @templates/adr.md): one file per structural decision, with the considered options and why they were rejected. Immutable: a change means a new ADR superseding the old one. Framing decisions commit on the default branch; story decisions travel with feature/<id>.
 
 ## Technical conventions
-<< IP Mike: boilerplate structure, stack, patterns, naming, commit rules. >>
+Boilerplate = fork d'`applyzi-flagship/` strippé de son domaine (ADR 001). Détail complet dans docs/architecture.md ; règles à respecter par tout implémenteur :
+
+**Stack (imposé, ne pas dévier sans ADR)** : Next.js 16 App Router · React 19 · TypeScript strict · Tailwind v4 CSS-first (`@theme`, pas de `tailwind.config`) · Supabase `@supabase/ssr` · Stripe (abonnements) · next-intl v4 · react-hook-form + zod · Vitest. Node 22, dev sur port 8000.
+
+**Structure** : routes dans `app/[locale]/` (authentifié sous `(app)/`, légal sous `(legal)/`, handlers non-locale sous `app/api/`). Primitives dans `components/ui/` ; features par dossier ; écran complexe = dossier + barrel `index.ts`. Domaine agnostique dans `core/` (ports, zéro import framework), implémentations dans `adapters/`. Plomberie dans `lib/{supabase,stripe,actions,data,auth,hooks}`. i18n dans `i18n/` + `messages/`. Migrations dans `supabase/migrations/`.
+
+**Règles (law)** :
+- Import alias **`@/`** partout (tsconfig + vitest). Fichiers kebab-case, exports PascalCase.
+- **Server actions** dans `lib/actions/*` (`"use server"`), **lectures** dans `lib/data/*`. Une action dérive l'identité de `getUser()` — jamais un `userId` en argument. Modules sensibles → `import "server-only"`.
+- **Trois clients Supabase** typés `<Database>` : `lib/supabase/client.ts` (browser), `server.ts` (RSC/actions, expose `getUser()`), `service-role.ts` (bypass RLS, server-only, webhooks). Logique sensible = RPC `SECURITY DEFINER` (ADR 004).
+- **Forms** : react-hook-form + `zodResolver`, schéma colocalisé `*-schema.ts`, messages = clés i18n.
+- **Erreurs** : les actions renvoient `{ ok } | { ok:false, error }` (pas d'exception). Report via `lib/observability.ts`.
+- **UI** : composer les primitives `components/ui/*` (pas de `<button className>` ad hoc) ; merge de classes via `cn()`.
+- **Design tokens** : uniquement via le bloc `@theme` de `app/globals.css` ; **aucune valeur couleur/radius/font-size/tracking/shadow arbitraire** (le `check-design-tokens` au prebuild casse le build sinon) (ADR 002).
+- **i18n** : navigation via `@/i18n/navigation` (jamais `next/link`) ; métadonnées via `generateMetadata` ; **aucune string UI en dur**, fr+en mises à jour ensemble.
+- **Middleware** = `proxy.ts` (renommé en Next 16) : liste `PROTECTED`, refresh session Supabase (rien entre `createServerClient` et `getUser()`).
+- **Tests** colocalisés (`*.test.ts`), Vitest.
+
+**Cimetière (interdit d'implémenter)** : multi-tenant/orgs, RBAC/CASL (le `role` `user`/`admin` suffit), 2FA/OTP, Inngest, admin dashboard complet, credit-ledger, Clean Architecture 3-couches, go-to-market. Ne pas réintroduire de domaine CV (Typst/apify/pdf-parse/mammoth).
 
 ## Definition of Done (per feature)
 - Single PR, structured description, readable diff

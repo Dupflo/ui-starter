@@ -28,7 +28,7 @@ Aucune.
 - **Strip** : `scripts/sync-cv-assets.mjs`, `videos/`, `rpi/` (si CV), services/components CV, deps typst/apify/pdf-parse/mammoth.
 - **Trap** : les hooks `predev`/`prebuild` appellent `sync-cv-assets.mjs` (à retirer) et `check-design-tokens.mjs` (à garder, sert à s02).
 - **Risk** : suppression large → vérifier qu'aucun import cassé ne subsiste (typecheck + build doivent rester verts).
-- Target ref : structure de projet de ship-saas.now (arborescence Next.js d'un SaaS générique).
+- Origine : **fork d'`applyzi-flagship/`** (c'est la source du code). Target ref (spec seulement) : l'arborescence Next.js générique d'un SaaS type ship-saas.now sert de repère pour ce qui doit rester après le strip, pas de code à copier.
 
 ---
 
@@ -40,7 +40,7 @@ Aucune.
 
 ### Acceptance criteria
 - [ ] Une source unique de tokens (fichier de thème Tailwind 4 `@theme`) définit la palette.
-- [ ] Modifier les valeurs de palette met à jour landing + app shell + composants sans toucher au code des composants.
+- [ ] Modifier les valeurs de palette met à jour tous les composants/écrans présents à ce stade sans toucher à leur code (garantie de plomberie tokens) ; les écrans construits plus tard (app shell s04, landing s07) héritent automatiquement de la palette et sont re-vérifiés à leur arrivée.
 - [ ] `npm run lint:design` (`check-design-tokens`) passe, et échoue si une couleur brute (hex/rgb) est utilisée hors tokens.
 - [ ] Un court doc (`docs/` ou README) explique comment re-thémer en 1 étape.
 
@@ -180,7 +180,7 @@ s03-auth, s04-app-shell, s07-landing.
 
 ### Agentic notes
 - next-intl déjà présent dans Applyzi — réutiliser l'infra (`messages/`, `i18n/`).
-- Story de finalisation : elle vérifie la couverture i18n des écrans construits en amont.
+- Story de finalisation : elle ne réécrit pas les écrans amont, elle **vérifie et complète** leur couverture i18n. Les stories s03/s04/s06/s07 exposent déjà leurs textes via des clés i18n (pas d'overlap : chacune possède ses clés, s08 possède la garantie de couverture fr+en).
 - Trap : les strings ajoutés en s03/s04/s06/s07 doivent tous exister dans les deux locales.
 
 ---

@@ -1,0 +1,7 @@
+# Build output & deps
+.next
+node_modules
+# Lockfile
+package-lock.json
+# Design-token guard — kept byte-identical to the boilerplate (s02 anchor); do not reformat
+scripts/check-design-tokens.mjs

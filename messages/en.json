@@ -120,7 +120,10 @@
   "home": {
     "title": "Starter base",
     "subtitle": "A neutral foundation, ready for your product. Replace this content with your own.",
-    "cta": "Open the app"
+    "cta": "Open the app",
+    "pricingTitle": "Simple, transparent pricing",
+    "closingTitle": "Ready to get started?",
+    "closingCta": "Create my account"
   },
   "admin": {
     "title": "Administration",

@@ -120,7 +120,10 @@
   "home": {
     "title": "Base de démarrage",
     "subtitle": "Une fondation neutre, prête à accueillir votre produit. Remplacez ce contenu par le vôtre.",
-    "cta": "Accéder à l'app"
+    "cta": "Accéder à l'app",
+    "pricingTitle": "Des tarifs simples et transparents",
+    "closingTitle": "Prêt à démarrer ?",
+    "closingCta": "Créer mon compte"
   },
   "admin": {
     "title": "Administration",

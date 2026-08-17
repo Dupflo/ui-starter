@@ -125,5 +125,18 @@
   "admin": {
     "title": "Administration",
     "subtitle": "Zone réservée aux administrateurs. Ajoutez ici vos outils d'administration."
+  },
+  "pricing": {
+    "title": "Tarification simple et transparente",
+    "subtitle": "Un seul plan, tout ce dont vous avez besoin. Résiliable à tout moment.",
+    "planProName": "Pro",
+    "planProPrice": "9 € / mois",
+    "planProFeatures": "Accès complet à toutes les fonctionnalités, support prioritaire.",
+    "subscribe": "S'abonner",
+    "subscribePending": "Redirection…",
+    "loginMessage": "Veuillez vous connecter pour vous abonner.",
+    "premiumTitle": "Accès premium",
+    "premiumSubtitle": "Vous avez un abonnement actif. Merci pour votre soutien !",
+    "dashboard": "Mon tableau de bord"
   }
 }

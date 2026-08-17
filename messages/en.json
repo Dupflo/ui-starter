@@ -125,5 +125,18 @@
   "admin": {
     "title": "Administration",
     "subtitle": "Admin-only area. Add your administration tools here."
+  },
+  "pricing": {
+    "title": "Simple, transparent pricing",
+    "subtitle": "One plan, everything you need. Cancel anytime.",
+    "planProName": "Pro",
+    "planProPrice": "$9 / month",
+    "planProFeatures": "Full access to all features, priority support.",
+    "subscribe": "Subscribe",
+    "subscribePending": "Redirecting…",
+    "loginMessage": "Please sign in to subscribe.",
+    "premiumTitle": "Premium access",
+    "premiumSubtitle": "You have an active subscription. Thank you for your support!",
+    "dashboard": "My dashboard"
   }
 }

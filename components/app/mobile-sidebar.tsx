@@ -11,9 +11,8 @@ import { SidebarNav } from "./app-sidebar"
  * de style. Ce composant est monté à l'intérieur de l'en-tête de page, qui est
  * `sticky top-0 z-10` — or `sticky` + `z-index` crée un CONTEXTE D'EMPILEMENT.
  * Rendu en place, le `z-50` du tiroir ne valait que dans ce contexte : vu du
- * reste de la page, l'ensemble restait plafonné à z-10. Les cartes CV (z-20)
- * passaient donc par-dessus le menu ouvert — on voyait leurs badges et leurs
- * boutons « Éditer / Télécharger » flotter au milieu du panneau vert.
+ * reste de la page, l'ensemble restait plafonné à z-10. Un contenu de page en
+ * `z-20` pouvait donc passer par-dessus le menu ouvert.
  *
  * Augmenter le z-index n'y changeait rien : il était prisonnier. Le portail sort
  * le tiroir de l'en-tête et le rattache à <body>, où son z-50 compte vraiment.

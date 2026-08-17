@@ -19,11 +19,14 @@ type AppUser = {
   initials: string
   /** Photo de profil (URL publique) — affichée dans l'avatar si présente. */
   photoUrl?: string | null
+  /** Adresse e-mail réelle — affichée sous le nom dans le badge étendu. */
+  email?: string | null
 }
 const UserContext = createContext<AppUser>({
   name: null,
   initials: "?",
   photoUrl: null,
+  email: null,
 })
 export const useAppUser = () => useContext(UserContext)
 

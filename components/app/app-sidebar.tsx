@@ -61,8 +61,8 @@ export function SidebarNav({
   onNavigate?: () => void
 }) {
   const t = useTranslations("appNav")
-  // Nom et initiales réels de l'utilisateur connecté.
-  const { name, initials, photoUrl } = useAppUser()
+  // Nom, initiales et email réels de l'utilisateur connecté.
+  const { name, initials, photoUrl, email } = useAppUser()
   const displayName = name ?? t("accountFallback")
   // Avatar : la photo de profil si elle existe, sinon les initiales.
   const avatar = photoUrl ? (
@@ -176,6 +176,9 @@ export function SidebarNav({
               <p className="truncate text-xs font-medium text-paper">
                 {displayName}
               </p>
+              {email ? (
+                <p className="truncate text-xs text-on-pine">{email}</p>
+              ) : null}
             </div>
             <button
               type="button"

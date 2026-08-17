@@ -47,7 +47,12 @@ export default async function AppLayout({
 
   return (
     <AppShell
-      user={{ name: displayName, initials: initialsOf(displayName), photoUrl }}
+      user={{
+        name: displayName,
+        initials: initialsOf(displayName),
+        photoUrl,
+        email: user?.email ?? null,
+      }}
       sidebarCollapsed={sidebarCollapsed}
     >
       {children}

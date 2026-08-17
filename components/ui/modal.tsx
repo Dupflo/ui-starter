@@ -84,7 +84,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         className={cn(
-          "light-scope relative z-10 flex max-h-[92dvh] w-full flex-col rounded-t-2xl bg-white shadow-float sm:max-h-[90dvh] sm:rounded-2xl",
+          "light-scope relative z-10 flex max-h-[92dvh] w-full flex-col rounded-t-2xl bg-input shadow-float sm:max-h-[90dvh] sm:rounded-2xl",
           closing ? "overlay-panel-out" : "overlay-panel",
           sizes[size],
         )}

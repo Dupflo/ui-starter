@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation"
 import { readConsent, writeConsent, CONSENT_EVENT } from "@/lib/consent"
 
 /**
- * Bandeau de consentement (RGPD/CNIL). Applyzi utilise des cookies de mesure
+ * Bandeau de consentement (RGPD/CNIL). Cette app utilise des cookies de mesure
  * d'audience (Google Analytics via GTM, Microsoft Clarity) chargés UNIQUEMENT
  * après acceptation. Refus aussi simple qu'accepter (deux boutons équivalents),
  * cookies nécessaires toujours actifs. Le choix est mémorisé 12 mois.

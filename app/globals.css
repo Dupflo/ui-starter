@@ -7,9 +7,7 @@
   Neutral starter design system — single source of truth for tokens.
   Replace the `pine` / `lime` VALUES below to re-theme the entire app in 1 step.
   See docs/theming.md for the complete re-theme guide.
-  TWO registers, ONE green:
-   - App chrome: pine + lime, General Sans / Geist (this file's defaults)
-   - CV artifact: Fraunces / Newsreader serif, pine accent, NEVER lime (see CvPreview)
+  App chrome: pine + lime, General Sans / Geist (this file's defaults)
 */
 @theme {
   /* Brand — neutral slate/indigo placeholder; replace values to re-theme */
@@ -25,7 +23,7 @@
   --color-line-strong: #d6d6de; /* stronger divider / border */
   --color-muted: #5c5c6b;
   --color-muted-ink: #6b6b7a;
-  --color-muted-soft: #9a9aaa; /* faint secondary text (CV artifact) */
+  --color-muted-soft: #9a9aaa; /* faint secondary text */
   --color-fill: #f4f4f8; /* pale fill (inputs, segmented, placeholders) */
   --color-fill-mute: #ececf2; /* muted fill / hairline */
   --color-input: #ffffff; /* form control background (white in light) */
@@ -252,7 +250,7 @@
   }
 }
 
-/* Onboarding — motion « import » (fichier → flux → Applyzi). Décoratif, boucle
+/* Onboarding — motion « import » (fichier → flux → app). Décoratif, boucle
    4 s, GPU-friendly (transform/opacity + stroke-dashoffset). Coupé si
    prefers-reduced-motion (l'état statique — doc, flèche, mark — reste lisible). */
 @keyframes ob-doc-in {

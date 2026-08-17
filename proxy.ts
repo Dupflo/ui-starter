@@ -6,7 +6,8 @@ import { routing } from "./i18n/routing"
 const intlMiddleware = createMiddleware(routing)
 
 // Routes du groupe (app) (sans le préfixe de locale). Tout le reste est public.
-const PROTECTED = ["/dashboard", "/settings"]
+// /admin: auth layer only — the role gate (admin-only) is enforced in the page, not here.
+const PROTECTED = ["/dashboard", "/settings", "/admin"]
 
 const LOCALE_PREFIX = /^\/(fr|en)(?=\/|$)/
 

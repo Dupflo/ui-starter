@@ -97,3 +97,37 @@ describe("landing page — AC3: tokens-only (no raw colour)", () => {
     ).toBe(false)
   })
 })
+
+// ─── s08-i18n: minimal pine header with LocaleMenu ───────────────────────────
+
+describe("landing page — s08-i18n: minimal pine header (Logo + LocaleMenu)", () => {
+  it("imports LocaleMenu", () => {
+    expect(
+      landingSource,
+      'page.tsx must import LocaleMenu from "@/components/ui/locale-menu" — s08 AC1',
+    ).toMatch(
+      /import\s*\{[^}]*\bLocaleMenu\b[^}]*\}\s*from\s*["']@\/components\/ui\/locale-menu["']/,
+    )
+  })
+
+  it("renders <LocaleMenu /> in the landing header", () => {
+    expect(
+      landingSource,
+      "page.tsx must render <LocaleMenu /> in the header — s08 AC1",
+    ).toContain("<LocaleMenu")
+  })
+
+  it("renders <Logo /> in the landing header", () => {
+    expect(
+      landingSource,
+      "page.tsx must render <Logo /> in the header alongside LocaleMenu — s08 AC1",
+    ).toContain("<Logo")
+  })
+
+  it("uses a pine background for the header (bg-pine token)", () => {
+    expect(
+      landingSource,
+      "landing header must use bg-pine token — LocaleMenu trigger uses text-paper/75 which is only visible on dark (pine) background",
+    ).toContain("bg-pine")
+  })
+})

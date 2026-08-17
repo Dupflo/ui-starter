@@ -1,13 +1,12 @@
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { Logo } from "@/components/brand/logo"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Container } from "@/components/ui/container"
 import { Title } from "@/components/ui/title"
 import { Text } from "@/components/ui/text"
 import { Link } from "@/i18n/navigation"
 import { PLANS } from "@/lib/stripe/config"
-import { SubscribeButton } from "./subscribe-button"
+import { PlanCard } from "@/components/pricing/plan-card"
 
 /**
  * Pricing page — rebuilt from PLANS (lib/stripe/config.ts).
@@ -51,28 +50,20 @@ export default async function PricingPage({
 
         <div className="mt-12 flex flex-wrap gap-6">
           {PLANS.map((plan) => (
-            <Card key={plan.id} pad="lg" className="w-full max-w-sm">
-              <Title as="h2">
-                {t(plan.nameKey as Parameters<typeof t>[0])}
-              </Title>
-              <Text size="base" className="mt-2 font-semibold">
-                {t(plan.priceLabelKey as Parameters<typeof t>[0])}
-              </Text>
-              {plan.featuresKey && (
-                <Text size="sm" leading className="mt-4 text-muted">
-                  {t(plan.featuresKey as Parameters<typeof t>[0])}
-                </Text>
-              )}
-              <div className="mt-6">
-                <SubscribeButton
-                  priceId={plan.priceId}
-                  label={t("subscribe")}
-                  pendingLabel={t("subscribePending")}
-                  loginMessage={t("loginMessage")}
-                  loginHref="/login"
-                />
-              </div>
-            </Card>
+            <PlanCard
+              key={plan.id}
+              plan={plan}
+              planName={t(plan.nameKey as Parameters<typeof t>[0])}
+              planPrice={t(plan.priceLabelKey as Parameters<typeof t>[0])}
+              planFeatures={
+                plan.featuresKey
+                  ? t(plan.featuresKey as Parameters<typeof t>[0])
+                  : undefined
+              }
+              subscribeLabel={t("subscribe")}
+              pendingLabel={t("subscribePending")}
+              loginMessage={t("loginMessage")}
+            />
           ))}
         </div>
       </Container>

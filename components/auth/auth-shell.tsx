@@ -15,7 +15,7 @@ export function AuthShell({
         <div className="mb-6 flex justify-center">
           <Logo />
         </div>
-        <div className="rounded-2xl bg-white p-8 shadow-float">{children}</div>
+        <div className="rounded-2xl bg-input p-8 shadow-float">{children}</div>
         <p className="mt-5 text-center font-mono text-2xs uppercase tracking-caps text-on-pine">
           {footer}
         </p>

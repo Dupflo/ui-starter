@@ -45,8 +45,10 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#10301E",
-          color: "#F5F5F0",
+          background:
+            "#10301E" /* design-tokens-allow: root error boundary — CSS bundle not guaranteed loaded */,
+          color:
+            "#F5F5F0" /* design-tokens-allow: root error boundary — CSS bundle not guaranteed loaded */,
           fontFamily: "system-ui, sans-serif",
           padding: "24px",
         }}
@@ -65,8 +67,10 @@ export default function GlobalError({
               border: "none",
               borderRadius: 999,
               padding: "12px 24px",
-              background: "#C5F24D",
-              color: "#10301E",
+              background:
+                "#C5F24D" /* design-tokens-allow: root error boundary — CSS bundle not guaranteed loaded */,
+              color:
+                "#10301E" /* design-tokens-allow: root error boundary — CSS bundle not guaranteed loaded */,
               fontWeight: 600,
               cursor: "pointer",
             }}

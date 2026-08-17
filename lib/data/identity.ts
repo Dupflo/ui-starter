@@ -46,6 +46,33 @@ export async function getAvatarUrl(userId: string): Promise<string | null> {
 }
 
 /**
+ * Rôle de l'utilisateur (`user` ou `admin`), lu depuis `profiles.role`.
+ *
+ * Défaut fail-safe : retourne `"user"` si la ligne est absente ou si `role`
+ * est null — jamais `admin` par défaut. L'appelant dérive `userId` de
+ * `getUser()` côté serveur ; le gate de route est dans la page, pas ici.
+ */
+export async function getRole(userId: string): Promise<"user" | "admin"> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle()
+  return (data?.role as "user" | "admin" | null | undefined) ?? "user"
+}
+
+/**
+ * Prédicat pur : `true` ssi le rôle est `"admin"`.
+ *
+ * Extrait pour être testable sans DOM runner et pour garder le gate de la
+ * page lisible : `if (!isAdmin(role)) notFound()`.
+ */
+export function isAdmin(role: "user" | "admin"): boolean {
+  return role === "admin"
+}
+
+/**
  * Initiales du badge rond. Deux lettres au plus, à partir des deux premiers
  * mots ; repli sur les deux premières lettres d'un nom en un seul mot.
  */

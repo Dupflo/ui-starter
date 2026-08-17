@@ -11,7 +11,7 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({ from }),
 }))
 
-import { initialsOf, getDisplayName } from "./identity"
+import { initialsOf, getDisplayName, getRole, isAdmin } from "./identity"
 
 // ─── initialsOf — pure function, aucun mock nécessaire ───────────────────────
 
@@ -32,6 +32,53 @@ describe("initialsOf", () => {
   it("retourne initiale-du-premier + initiale-du-dernier mot pour deux mots et plus", () => {
     expect(initialsOf("Ada Lovelace")).toBe("AL")
     expect(initialsOf("Jean Claude Durand")).toBe("JD")
+  })
+})
+
+// ─── getRole — lecture serveur du rôle ───────────────────────────────────────
+
+describe("getRole", () => {
+  beforeEach(() => {
+    maybeSingle.mockReset()
+    from.mockClear()
+    select.mockClear()
+    eq.mockClear()
+  })
+
+  it("retourne 'admin' quand le profil a role = 'admin'", async () => {
+    maybeSingle.mockResolvedValue({ data: { role: "admin" } })
+    const result = await getRole("u1")
+    expect(result).toBe("admin")
+  })
+
+  it("retourne 'user' quand le profil a role = 'user'", async () => {
+    maybeSingle.mockResolvedValue({ data: { role: "user" } })
+    const result = await getRole("u1")
+    expect(result).toBe("user")
+  })
+
+  it("retourne 'user' (fail-safe) quand la ligne est absente (data: null)", async () => {
+    maybeSingle.mockResolvedValue({ data: null })
+    const result = await getRole("u1")
+    expect(result).toBe("user")
+  })
+
+  it("retourne 'user' (fail-safe) quand role est null", async () => {
+    maybeSingle.mockResolvedValue({ data: { role: null } })
+    const result = await getRole("u1")
+    expect(result).toBe("user")
+  })
+})
+
+// ─── isAdmin — prédicat pur, gate decision ────────────────────────────────────
+
+describe("isAdmin", () => {
+  it("retourne true pour 'admin'", () => {
+    expect(isAdmin("admin")).toBe(true)
+  })
+
+  it("retourne false pour 'user'", () => {
+    expect(isAdmin("user")).toBe(false)
   })
 })
 

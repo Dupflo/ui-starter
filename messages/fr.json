@@ -121,5 +121,9 @@
     "title": "Base de démarrage",
     "subtitle": "Une fondation neutre, prête à accueillir votre produit. Remplacez ce contenu par le vôtre.",
     "cta": "Accéder à l'app"
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Zone réservée aux administrateurs. Ajoutez ici vos outils d'administration."
   }
 }

@@ -1,0 +1,125 @@
+{
+  "metadata": {
+    "title": "UI Starter",
+    "description": "A neutral starter base: auth, app-shell, i18n and UI primitives, ready for your product."
+  },
+  "appNav": {
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "collapse": "Collapse menu",
+    "expand": "Expand menu",
+    "logout": "Sign out",
+    "themeDark": "Dark mode",
+    "themeLight": "Light mode",
+    "accountFallback": "My account"
+  },
+  "auth": {
+    "loginTitle": "Welcome back.",
+    "loginSubtitle": "Pick up where you left off.",
+    "google": "Continue with Google",
+    "or": "OR",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full name",
+    "loginCta": "Sign in",
+    "loginPending": "Signing in…",
+    "signupCta": "Create my account",
+    "noAccount": "No account yet?",
+    "signupLink": "Create an account",
+    "hasAccount": "Already have an account?",
+    "loginLink": "Sign in",
+    "signupTitle": "Create your account.",
+    "signupSubtitle": "Create your account in seconds.",
+    "footer": "Create your account in seconds.",
+    "authErrorEmail": "Invalid email",
+    "authErrorInvalid": "Incorrect email or password",
+    "authErrorRequired": "Required",
+    "authErrorPassword": "8 characters minimum",
+    "authErrorEmailTaken": "An account already exists with this email. Log in instead.",
+    "authErrorSignup": "Account creation failed. Try again in a moment.",
+    "authErrorConfirmEmail": "Account created. Check your inbox and click the confirmation link to log in.",
+    "forgotLink": "Forgot password?"
+  },
+  "cookieBanner": {
+    "aria": "Cookie consent",
+    "body": "This site uses analytics cookies to improve the experience. They are only set with your consent; necessary cookies stay active. <a>Cookie policy</a>.",
+    "accept": "Accept",
+    "refuse": "Decline"
+  },
+  "dashboard": {
+    "greeting": "Hello {name}!",
+    "subtitle": "Welcome to your dashboard."
+  },
+  "forgot": {
+    "title": "Forgot your password?",
+    "subtitle": "Enter your email and we'll send you a link to choose a new one.",
+    "cta": "Send the link",
+    "sentTitle": "It's on its way.",
+    "sentBody": "If an account exists with this email, you'll receive a reset link. Check your spam folder too.",
+    "backToLogin": "Back to login"
+  },
+  "legal": {
+    "mentionsLegales": "Legal notice",
+    "cgv": "Terms of sale",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "backHome": "Back to home",
+    "placeholderNotice": "Placeholder legal text — replace before production. This starter ships no real legal content: fill in your company identity and your own terms.",
+    "mentionsTitle": "Legal notice",
+    "mentionsUpdated": "To be completed",
+    "mentionsBody": "State here the site's publisher (company name, legal form, registered office, registration, contact), the publication director and the host.",
+    "cgvTitle": "Terms of sale",
+    "cgvUpdated": "To be completed",
+    "cgvBody": "Describe here your offers and their prices, ordering and payment terms, delivery, the right of withdrawal, refunds, liability and applicable law.",
+    "privacyTitle": "Privacy policy",
+    "privacyUpdated": "To be completed",
+    "privacyBody": "Describe here the data you collect, the purposes and legal bases, the recipients and processors, the retention periods and the data subjects' rights.",
+    "cookiesTitle": "Cookie policy",
+    "cookiesUpdated": "To be completed",
+    "cookiesBody": "Describe here the cookies you set (strictly necessary, preferences, consent-based analytics) and how to manage your choice.",
+    "manageConsent": "Manage my consent"
+  },
+  "localeSwitcher": {
+    "label": "Language"
+  },
+  "newPassword": {
+    "title": "Choose a new password.",
+    "subtitle": "8 characters minimum.",
+    "passwordLabel": "New password",
+    "cta": "Save and log me in",
+    "error": "This link has expired or was already used. Request a new one."
+  },
+  "settings": {
+    "profile": "Profile",
+    "fullName": "Full name",
+    "save": "Save changes",
+    "saved": "Saved",
+    "saveError": "Couldn't save. Try again.",
+    "security": "Security",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "passwordMismatch": "Passwords don't match",
+    "updatePassword": "Update password",
+    "passwordChanged": "Password updated",
+    "passwordWrongCurrent": "Current password is incorrect",
+    "passwordNoAccount": "This account signs in with Google — there's no password to change.",
+    "preferences": "Preferences",
+    "interfaceLanguage": "Interface language",
+    "account": "Account",
+    "logout": "Log out",
+    "logoutNote": "Sign out on this device.",
+    "deleteAccount": "Delete account",
+    "deleteAccountNote": "Permanently delete your account and all your data.",
+    "cancel": "Cancel",
+    "deleteConfirm": "Delete permanently",
+    "deleteModalBody": "This permanently deletes your account and all associated data. This action is <b>irreversible</b>.",
+    "deleteConfirmEmail": "Retype your email address to confirm",
+    "deleteError": "The address doesn't match, or the deletion failed."
+  },
+  "home": {
+    "title": "Starter base",
+    "subtitle": "A neutral foundation, ready for your product. Replace this content with your own.",
+    "cta": "Open the app"
+  }
+}

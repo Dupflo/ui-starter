@@ -1,0 +1,125 @@
+{
+  "metadata": {
+    "title": "UI Starter",
+    "description": "Une base de démarrage neutre : auth, app-shell, i18n et primitives UI, prête à accueillir votre produit."
+  },
+  "appNav": {
+    "dashboard": "Tableau de bord",
+    "settings": "Réglages",
+    "collapse": "Réduire le menu",
+    "expand": "Déplier le menu",
+    "logout": "Se déconnecter",
+    "themeDark": "Mode sombre",
+    "themeLight": "Mode clair",
+    "accountFallback": "Mon compte"
+  },
+  "auth": {
+    "loginTitle": "Bon retour.",
+    "loginSubtitle": "Reprends là où tu t'es arrêté.",
+    "google": "Continuer avec Google",
+    "or": "OU",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "name": "Nom complet",
+    "loginCta": "Se connecter",
+    "loginPending": "Connexion…",
+    "signupCta": "Créer mon compte",
+    "noAccount": "Pas encore de compte ?",
+    "signupLink": "Créer un compte",
+    "hasAccount": "Déjà un compte ?",
+    "loginLink": "Se connecter",
+    "signupTitle": "Crée ton compte.",
+    "signupSubtitle": "Crée ton compte en quelques secondes.",
+    "footer": "Crée ton compte en quelques secondes.",
+    "authErrorEmail": "E-mail invalide",
+    "authErrorInvalid": "E-mail ou mot de passe incorrect",
+    "authErrorRequired": "Champ requis",
+    "authErrorPassword": "8 caractères minimum",
+    "authErrorEmailTaken": "Un compte existe déjà avec cet e-mail. Connecte-toi.",
+    "authErrorSignup": "La création du compte a échoué. Réessaie dans un instant.",
+    "authErrorConfirmEmail": "Compte créé. Vérifie ta boîte mail et clique sur le lien de confirmation pour te connecter.",
+    "forgotLink": "Mot de passe oublié ?"
+  },
+  "cookieBanner": {
+    "aria": "Consentement cookies",
+    "body": "Ce site utilise des cookies de mesure d'audience pour améliorer l'expérience. Ils ne sont déposés qu'avec votre accord ; les cookies nécessaires restent toujours actifs. <a>Politique cookies</a>.",
+    "accept": "Accepter",
+    "refuse": "Refuser"
+  },
+  "dashboard": {
+    "greeting": "Bonjour {name} !",
+    "subtitle": "Bienvenue sur votre tableau de bord."
+  },
+  "forgot": {
+    "title": "Mot de passe oublié ?",
+    "subtitle": "Indique ton e-mail : on t'envoie un lien pour en choisir un nouveau.",
+    "cta": "Envoyer le lien",
+    "sentTitle": "C'est envoyé.",
+    "sentBody": "Si un compte existe avec cet e-mail, tu vas recevoir un lien de réinitialisation. Pense à vérifier tes spams.",
+    "backToLogin": "Retour à la connexion"
+  },
+  "legal": {
+    "mentionsLegales": "Mentions légales",
+    "cgv": "CGV",
+    "privacy": "Confidentialité",
+    "cookies": "Cookies",
+    "backHome": "Retour à l'accueil",
+    "placeholderNotice": "Texte légal indicatif — à remplacer avant la mise en production. Ce starter ne fournit aucun contenu juridique réel : renseignez l'identité de votre société et vos propres conditions.",
+    "mentionsTitle": "Mentions légales",
+    "mentionsUpdated": "À compléter",
+    "mentionsBody": "Renseignez ici l'éditeur du site (raison sociale, forme juridique, siège, immatriculation, contact), le directeur de la publication et l'hébergeur.",
+    "cgvTitle": "Conditions générales de vente",
+    "cgvUpdated": "À compléter",
+    "cgvBody": "Décrivez ici vos offres et leurs prix, les modalités de commande et de paiement, la livraison, le droit de rétractation, le remboursement, la responsabilité et le droit applicable.",
+    "privacyTitle": "Politique de confidentialité",
+    "privacyUpdated": "À compléter",
+    "privacyBody": "Décrivez ici les données que vous collectez, les finalités et bases légales, les destinataires et sous-traitants, les durées de conservation et les droits des personnes.",
+    "cookiesTitle": "Politique cookies",
+    "cookiesUpdated": "À compléter",
+    "cookiesBody": "Décrivez ici les cookies déposés (strictement nécessaires, préférences, mesure d'audience soumise à consentement) et la manière de gérer votre choix.",
+    "manageConsent": "Gérer mon consentement"
+  },
+  "localeSwitcher": {
+    "label": "Langue"
+  },
+  "newPassword": {
+    "title": "Choisis un nouveau mot de passe.",
+    "subtitle": "8 caractères minimum.",
+    "passwordLabel": "Nouveau mot de passe",
+    "cta": "Enregistrer et me connecter",
+    "error": "Ce lien a expiré ou a déjà été utilisé. Demande-en un nouveau."
+  },
+  "settings": {
+    "profile": "Profil",
+    "fullName": "Nom complet",
+    "save": "Enregistrer les modifications",
+    "saved": "Enregistré",
+    "saveError": "Échec de l'enregistrement. Réessaie.",
+    "security": "Sécurité",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le nouveau mot de passe",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "passwordChanged": "Mot de passe mis à jour",
+    "passwordWrongCurrent": "Mot de passe actuel incorrect",
+    "passwordNoAccount": "Ce compte se connecte via Google — aucun mot de passe à changer.",
+    "preferences": "Préférences",
+    "interfaceLanguage": "Langue de l'interface",
+    "account": "Compte",
+    "logout": "Se déconnecter",
+    "logoutNote": "Ferme ta session sur cet appareil.",
+    "deleteAccount": "Supprimer le compte",
+    "deleteAccountNote": "Supprime définitivement ton compte et toutes tes données.",
+    "cancel": "Annuler",
+    "deleteConfirm": "Supprimer définitivement",
+    "deleteModalBody": "Cette action supprime <b>définitivement</b> ton compte et toutes les données associées. Elle est irréversible.",
+    "deleteConfirmEmail": "Retape ton adresse e-mail pour confirmer",
+    "deleteError": "L'adresse ne correspond pas, ou la suppression a échoué."
+  },
+  "home": {
+    "title": "Base de démarrage",
+    "subtitle": "Une fondation neutre, prête à accueillir votre produit. Remplacez ce contenu par le vôtre.",
+    "cta": "Accéder à l'app"
+  }
+}

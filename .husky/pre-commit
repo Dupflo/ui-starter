@@ -1,0 +1,9 @@
+set -e
+
+# Use the project's Node (.nvmrc) when nvm is available — lint-staged needs Node ≥ 20.12.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use >/dev/null 2>&1 || true
+
+# Fast, per-file: format staged files + the design-token guard.
+npx lint-staged
+node scripts/check-design-tokens.mjs

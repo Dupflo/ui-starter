@@ -1,0 +1,416 @@
+/* Fonts first (all @import must precede other rules) */
+@import url("https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&family=Geist:wght@400..600&family=Geist+Mono:wght@400..500&display=swap");
+@import "tailwindcss";
+
+/*
+  Applyzi design system — single source of truth for tokens.
+  TWO registers, ONE green:
+   - App chrome: pine + lime, General Sans / Geist (this file's defaults)
+   - CV artifact: Fraunces / Newsreader serif, pine accent, NEVER lime (see CvPreview)
+*/
+@theme {
+  /* Brand */
+  --color-pine: #10301e;
+  --color-pine-900: #0b2014;
+  --color-lime: #c5f24d;
+  --color-ink: #161616;
+
+  /* Surfaces / neutrals */
+  --color-paper: #f9faf9;
+  --color-sand: #f5f8f2;
+  --color-line: #e2e8dd;
+  --color-line-strong: #d6dad2; /* stronger divider / border */
+  --color-muted: #5c6b62;
+  --color-muted-ink: #6b6b6b;
+  --color-muted-soft: #9aa89f; /* faint secondary text (CV artifact) */
+  --color-fill: #f4f6f1; /* pale fill (inputs, segmented, placeholders) */
+  --color-fill-mute: #ecefe9; /* muted fill / hairline */
+  --color-input: #ffffff; /* form control background (white in light) */
+  --color-success-soft: #e4f4ea; /* pale success background */
+
+  /* Semantic accents */
+  --color-ink-strong: #0f1a14; /* app headings */
+  --color-link: #3f7a57; /* inline green text links */
+  --color-success: #1f8a4c; /* positive / sent / trend up */
+  --color-danger: #c5402e; /* destructive / errors */
+  --color-warning: #c9810a; /* warning / not connected */
+  --color-warning-soft: #f7eddb; /* pale warning background */
+
+  /* Foreground on pine surfaces */
+  --color-on-pine: #aecbb8; /* muted text on pine */
+  --color-on-pine-bright: #cfe3d6; /* brighter text on pine */
+
+  /* Skill categories — one colour per category (exact maquette CATMETA) */
+  --color-cat-sector: #1f4e8c; /* Connaissances du secteur — blue */
+  --color-cat-sector-soft: #eef2fb;
+  --color-cat-tools: #0f766e; /* Outils et technologie — teal */
+  --color-cat-tools-soft: #e7f3f0;
+  --color-cat-people: #7a2e55; /* Compétences interpersonnelles — rose (text) */
+  --color-cat-people-dot: #9d3d6c; /* rose dot — brighter than text */
+  --color-cat-people-soft: #f7edf2;
+
+  /* Typography */
+  --font-display: "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-read: "Newsreader", Georgia, serif;
+
+  /* Type scale — extends the default scale at the small end (UI labels) */
+  --text-2xs: 0.625rem; /* 10px */
+
+  /* Letter-spacing — uppercase mono labels */
+  --tracking-caps: 0.16em;
+
+  /* Elevation */
+  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.1);
+  --shadow-float: 0 8px 40px rgba(16, 48, 30, 0.16);
+  --shadow-sheet: 0 -6px 32px rgba(16, 48, 30, 0.16); /* bottom-sheet (mobile) */
+
+  /* Radii */
+  --radius-card: 1.25rem;
+}
+
+/*
+  Dark mode — scoped to the app shell via a `.dark` class (NOT <html>), so
+  marketing/auth pages stay light. We override the semantic tokens; every
+  `bg-paper` / `text-ink` / `border-line` utility resolves to its dark value
+  inside the subtree. Brand pine/lime are intentionally unchanged.
+*/
+.dark {
+  --color-sand: #0c2016; /* workspace canvas */
+  --color-paper: #12301e; /* cards / surfaces */
+  --color-line: #21452f; /* hairlines */
+  --color-line-strong: #2a5740;
+  --color-ink: #eaf3ec;
+  --color-ink-strong: #eaf3ec;
+  --color-muted: #8fb39c;
+  --color-muted-ink: #8fb39c;
+  --color-muted-soft: #6f9180;
+  --color-fill: #0f2719; /* segmented / pale fills */
+  --color-fill-mute: #163a26;
+  --color-input: #0f2719; /* form control background */
+  --color-success-soft: #16331f;
+  --color-warning-soft: #36300f;
+}
+
+/*
+  `paper` is overloaded: a light card surface AND the bright foreground on pine
+  chrome (sidebar, pine buttons, banners). Dark mode darkens the surface, so any
+  pine surface re-pins `paper` bright to keep its text/logo legible.
+*/
+.dark .bg-pine,
+.dark .bg-pine-900 {
+  --color-paper: #f9faf9;
+}
+
+/*
+  Force the light palette inside a subtree even under `.dark`. Applied to
+  surfaces that must stay light regardless of theme: modal cards and the CV
+  artifact (the printed CV is always on white paper).
+*/
+.light-scope {
+  --color-sand: #f5f8f2;
+  --color-paper: #f9faf9;
+  --color-line: #e2e8dd;
+  --color-line-strong: #d6dad2;
+  --color-ink: #161616;
+  --color-ink-strong: #0f1a14;
+  --color-muted: #5c6b62;
+  --color-muted-ink: #6b6b6b;
+  --color-muted-soft: #9aa89f;
+  --color-fill: #f4f6f1;
+  --color-fill-mute: #ecefe9;
+  --color-input: #ffffff;
+  --color-success-soft: #e4f4ea;
+  --color-warning-soft: #f7eddb;
+}
+
+/* ── Échelle des z-index (référence) ────────────────────────────────────────
+   Les couches étaient posées à l'estime, avec des ÉGALITÉS qui laissaient
+   l'ordre du DOM trancher — d'où des superpositions incohérentes (le dock de
+   chat au-dessus du voile d'un tiroir, un bandeau de statut sous une modale).
+   Un nouvel élément flottant se range dans l'une de ces couches :
+
+     10-20  éléments internes d'une carte / d'un panneau
+     30     barres fixes de page (stepper mobile du builder)
+     40     panneaux persistants (dock de chat) — sous les overlays
+     50     overlays modaux : modale, tiroir de mise en page, lightbox,
+            sidebar mobile, en-tête collant de la landing
+     60     statuts transitoires au-dessus de tout : bandeau « CV en cours de
+            mise à jour », bandeau cookies
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Overlay animations — GPU-friendly (opacity + transform only) so the blurred
+   backdrop fades and panels slide smoothly, even on mobile. */
+@keyframes app-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes app-sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes app-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+/* Exit counterparts (played while the dialog animates out before unmounting). */
+@keyframes app-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes app-sheet-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes app-modal-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+}
+
+/* Backdrop fade (opacity only → smooth even with backdrop-blur behind it). */
+.overlay-fade {
+  animation: app-fade-in 0.2s ease-out both;
+  will-change: opacity;
+}
+/* Panel: slides up as a sheet on mobile, fades/pops in centred on ≥sm. */
+.overlay-panel {
+  animation: app-sheet-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+  will-change: transform;
+}
+@media (min-width: 640px) {
+  .overlay-panel {
+    animation: app-modal-in 0.2s ease-out both;
+  }
+}
+/* Exit animations — applied for the brief closing window before unmount. */
+.overlay-fade-out {
+  animation: app-fade-out 0.2s ease-in both;
+  will-change: opacity;
+}
+.overlay-panel-out {
+  animation: app-sheet-down 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
+  will-change: transform;
+}
+@media (min-width: 640px) {
+  .overlay-panel-out {
+    animation: app-modal-out 0.18s ease-in both;
+  }
+}
+@keyframes app-slide-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+/* Left-anchored drawer (mobile nav). */
+.overlay-drawer {
+  animation: app-slide-left 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay-fade,
+  .overlay-panel,
+  .overlay-drawer,
+  .overlay-fade-out,
+  .overlay-panel-out {
+    animation: none;
+  }
+}
+
+/* Onboarding — motion « import » (fichier → flux → Applyzi). Décoratif, boucle
+   4 s, GPU-friendly (transform/opacity + stroke-dashoffset). Coupé si
+   prefers-reduced-motion (l'état statique — doc, flèche, mark — reste lisible). */
+@keyframes ob-doc-in {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes ob-dash {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+@keyframes ob-dot {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  96%,
+  100% {
+    transform: translateX(148px);
+    opacity: 0;
+  }
+}
+@keyframes ob-pulse {
+  0%,
+  55% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+@keyframes ob-mark-pop {
+  0%,
+  60%,
+  100% {
+    transform: scale(1);
+  }
+  72% {
+    transform: scale(1.07);
+  }
+  84% {
+    transform: scale(1);
+  }
+}
+.ob-doc {
+  animation: ob-doc-in 4s ease-in-out infinite;
+  will-change: transform;
+}
+.ob-dash {
+  stroke-dasharray: 6 5;
+  animation: ob-dash 1.1s linear infinite;
+}
+.ob-dot {
+  animation: ob-dot 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.ob-dot-2 {
+  animation-delay: 0.55s;
+}
+.ob-pulse {
+  animation: ob-pulse 4s ease-out infinite;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+.ob-mark {
+  animation: ob-mark-pop 4s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ob-doc,
+  .ob-dash,
+  .ob-dot,
+  .ob-pulse,
+  .ob-mark {
+    animation: none;
+  }
+  .ob-dot {
+    opacity: 0;
+  }
+  .ob-pulse {
+    opacity: 0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-pine);
+  }
+  body {
+    background-color: var(--color-pine);
+    color: var(--color-paper);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Lime is the single strong accent: dark text on lime, never white. */
+  ::selection {
+    background-color: var(--color-lime);
+    color: var(--color-pine);
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+/* iOS Safari auto-zooms when focusing a control whose font-size is < 16px.
+   Force 16px on mobile form controls to prevent it (keeps pinch-zoom intact).
+   Unlayered so it wins over Tailwind's text-* utilities. */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* ── Print / PDF export ──
+   The CV print layer (#cv-print) is portaled to <body> and kept out of the
+   on-screen flow. When printing we hide the whole app and show only that layer,
+   one A4/Letter frame per physical page. Real vector text → ATS-safe PDF.
+   Unlayered so these rules win over Tailwind utilities. */
+#cv-print {
+  display: none;
+}
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body > * {
+    display: none !important;
+  }
+  body > #cv-print {
+    display: block !important;
+  }
+  #cv-print .print-page {
+    break-inside: avoid;
+    break-after: page;
+  }
+  #cv-print .print-page:last-child {
+    break-after: auto;
+  }
+}

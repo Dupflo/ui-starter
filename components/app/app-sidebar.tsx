@@ -229,7 +229,7 @@ export function AppSidebar({
   return (
     <aside
       className={cn(
-        "light-scope hidden shrink-0 self-start bg-pine px-4 py-6 transition-[width] duration-200 md:sticky md:top-0 md:z-40 md:block md:h-dvh",
+        "light-scope hidden shrink-0 self-start bg-pine px-4 py-6 print-hide transition-[width] duration-200 md:sticky md:top-0 md:z-40 md:block md:h-dvh",
         collapsed ? "w-20" : "w-56",
       )}
     >

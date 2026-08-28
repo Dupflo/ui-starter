@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 220 220">
-  <!-- favicon / app icon. -->
-  <rect width="220" height="220" rx="48" fill="#10301E"/>
-  <g transform="translate(45 50) scale(0.8)">
-    <path fill="#C5F24D" d="M49.9,100.4c0.3,0.1,0.3,0.3,0.2,0.4c-0.8,0.5-1,1.5-1.5,2.6L27,150l-27,0l15.4-32L69.6,0l21,0L122,68.6 l-21.5,10.6L79.9,34.4L49.9,100.4z"/>
-    <path fill="#C5F24D" d="M129.4,85.8c0.6,0.6,0.8,1,1.2,1.8l29.2,62.4l-26.9,0L110,100.8L129.4,85.8z"/>
-    <path fill="#F9FAF9" d="M129.4,85.8l-19.4,15l-42.3,31.6l-17.7-31.6c0.1-0.1,0-0.3-0.2-0.4l17.5,8.5l24.6-12.8l70.5-36.3 L129.4,85.8z"/>
-  </g>
+  <!-- favicon / app icon (tab, bookmarks, PWA install prompt). Neutral geometric
+       mark. Hex values are the resolved @theme tokens (pine / lime / paper, see
+       app/globals.css) — a standalone SVG can't consume Tailwind token classes,
+       so re-theming means editing this file alongside the @theme block. -->
+  <rect width="220" height="220" rx="48" fill="#1E2132"/>
+  <path d="M110 50 L170 110 L110 170 L50 110 Z" fill="#818CF8"/>
+  <path d="M110 80 L140 110 L110 140 L80 110 Z" fill="#F9F9FB"/>
 </svg>

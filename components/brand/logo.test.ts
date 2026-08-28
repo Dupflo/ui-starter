@@ -34,3 +34,28 @@ describe("Logo component — no killed-domain branding", () => {
     )
   })
 })
+
+// ─── s10-defect-sweep F2: light-register wordmark accent passes WCAG AA ───────
+//
+// wordmarkAccent used to be a tautological ternary (`text-lime` on both
+// branches): the light register was never actually designed. The `lime`
+// token on the `paper` background is 2.84:1 — fails AA (4.5:1). The `link`
+// token on `paper` is 5.98:1 — passes.
+
+describe("Logo component — s10-defect-sweep F2: light-register accent contrast", () => {
+  it("wordmarkAccent ternary is not tautological (dark and light branches differ)", () => {
+    expect(
+      logoSource,
+      "wordmarkAccent must not resolve to the same class in both branches of the variant ternary — the light register needs its own, contrast-checked token",
+    ).not.toMatch(
+      /wordmarkAccent = variant === "dark" \? (["'][\w-]+["']) : \1/,
+    )
+  })
+
+  it("light register uses text-link (5.98:1 on paper) instead of text-lime (2.84:1, fails AA)", () => {
+    expect(
+      logoSource,
+      'variant="light" wordmarkAccent must resolve to "text-link" — an existing token that passes WCAG AA (4.5:1) against text-paper, unlike text-lime',
+    ).toMatch(/variant === "dark" \? "text-lime" : "text-link"/)
+  })
+})

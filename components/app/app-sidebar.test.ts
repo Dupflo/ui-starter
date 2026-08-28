@@ -27,6 +27,11 @@ const shellSource = readFileSync(
   "utf8",
 )
 
+const mobileSidebarSource = readFileSync(
+  path.join(fileURLToPath(new URL(".", import.meta.url)), "mobile-sidebar.tsx"),
+  "utf8",
+)
+
 // ─── AC2: threading — email destructured from context and rendered ────────────
 
 describe("app-sidebar — AC2: email threading", () => {
@@ -98,5 +103,27 @@ describe("app-sidebar — AC3: tokens-only (no raw colour)", () => {
       rawColourPattern.test(sidebarSource),
       "app-sidebar.tsx must not contain raw colours — use design tokens only",
     ).toBe(false)
+  })
+})
+
+// ─── s10-defect-sweep F1: sidebar chrome hidden on print ──────────────────────
+//
+// AppSidebar is a persistent bg-pine <aside> with a text-paper Logo/nav — the
+// same invisible-chrome-on-print bug as the landing/legal headers. The mobile
+// drawer duplicates that chrome inside a portal.
+
+describe("app-sidebar — s10-defect-sweep F1: chrome hidden on print", () => {
+  it("desktop <aside> carries print-hide", () => {
+    expect(
+      sidebarSource,
+      'app-sidebar.tsx AppSidebar <aside> must carry "print-hide" — its bg-pine background and text-paper Logo/nav print invisible otherwise',
+    ).toMatch(/"light-scope hidden shrink-0 self-start bg-pine[^"]*print-hide/)
+  })
+
+  it("mobile drawer panel carries print-hide", () => {
+    expect(
+      mobileSidebarSource,
+      'mobile-sidebar.tsx drawer panel must carry "print-hide" — same bg-pine chrome, portalled to <body>',
+    ).toMatch(/overlay-drawer light-scope absolute[^"]*print-hide/)
   })
 })

@@ -36,7 +36,7 @@ export default async function LandingPage({
   return (
     <>
       {/* ── Minimal landing header — Logo + LocaleMenu (pine bar) ──── */}
-      <header className="bg-pine">
+      <header className="bg-pine print-hide">
         <Container className="flex items-center justify-between py-4">
           <Logo />
           <LocaleMenu />

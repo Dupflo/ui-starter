@@ -1,63 +1,69 @@
 # Design System — ui-starter
 
-> **Source de vérité : le bloc `@theme` de `app/globals.css`** (Tailwind v4 CSS-first, pas de `tailwind.config`). Ce document *capture* ce système pour que `/ks-design` le consomme à chaque story UI — il ne l'invente pas.
-> ui-starter est un fork d'`applyzi-flagship` **strippé du domaine CV**. On garde le **chrome de l'app** (pine + lime, General Sans / Geist) ; le **registre artefact CV** (serif Fraunces/Newsreader, couleurs de catégories de compétences) est hors périmètre — voir la dernière section.
+> **Source de vérité : le bloc `@theme` de `app/globals.css`** (Tailwind v4 CSS-first, pas de `tailwind.config`). Ce document _capture_ ce système pour que `/ks-design` le consomme à chaque story UI — il ne l'invente pas.
+> ui-starter est un fork d'`applyzi-flagship` **strippé du domaine CV**. On garde le **chrome de l'app** (tokens `pine` + `lime`, Plus Jakarta Sans / Geist) ; le **registre artefact CV** (serif Fraunces/Newsreader, couleurs de catégories de compétences) est hors périmètre — voir la dernière section.
 > **Règle de fer (ADR 002)** : aucune valeur arbitraire de couleur / radius / font-size / tracking / shadow. Toujours une classe de token. Un besoin absent = **ajouter un token dans `@theme`**, jamais un `text-[#hex]` (le guard `check-design-tokens` casse le build au `prebuild`).
 
 ## Tokens
 
 ### Couleurs — marque
-| Token (classe) | Valeur | Usage |
-|---|---|---|
-| `pine` | `#10301E` | Vert sombre de marque — chrome (sidebar, cartes pine, bandeaux), fond `<body>` |
-| `pine-900` | `#0B2014` | Pine plus sombre — hover des surfaces pine |
-| `lime` | `#C5F24D` | **Accent fort unique** — CTA principal / état actif. Texte foncé dessus, jamais blanc |
-| `ink` | `#161616` | Texte principal (light) |
+
+| Token (classe) | Valeur    | Usage                                                                                 |
+| -------------- | --------- | ------------------------------------------------------------------------------------- |
+| `pine`         | `#1E2132` | Couleur de marque sombre — chrome (sidebar, cartes pine, bandeaux), fond `<body>`     |
+| `pine-900`     | `#141725` | Pine plus sombre — hover des surfaces pine                                            |
+| `lime`         | `#818CF8` | **Accent fort unique** — CTA principal / état actif. Texte foncé dessus, jamais blanc |
+| `ink`          | `#161616` | Texte principal (light)                                                               |
 
 ### Couleurs — surfaces & neutres
-| Token | Valeur | Usage |
-|---|---|---|
-| `paper` | `#F9FAF9` | Surface de carte claire · aussi foreground clair sur surfaces pine |
-| `sand` | `#F5F8F2` | Canvas / fond d'espace de travail |
-| `line` | `#E2E8DD` | Filets / bordures |
-| `line-strong` | `#D6DAD2` | Séparateur / bordure plus marquée |
-| `muted` | `#5C6B62` | Texte secondaire |
-| `muted-ink` | `#6B6B6B` | Texte secondaire neutre (gris) |
-| `muted-soft` | `#9AA89F` | Texte tertiaire très discret |
-| `fill` | `#F4F6F1` | Remplissage pâle (inputs, segmented, placeholders) |
-| `fill-mute` | `#ECEFE9` | Remplissage atténué / hairline |
-| `input` | `#FFFFFF` | Fond des contrôles de formulaire (blanc en light) |
+
+| Token         | Valeur    | Usage                                                              |
+| ------------- | --------- | ------------------------------------------------------------------ |
+| `paper`       | `#F9F9FB` | Surface de carte claire · aussi foreground clair sur surfaces pine |
+| `sand`        | `#F5F5F8` | Canvas / fond d'espace de travail                                  |
+| `line`        | `#E2E2E8` | Filets / bordures                                                  |
+| `line-strong` | `#D6D6DE` | Séparateur / bordure plus marquée                                  |
+| `muted`       | `#5C5C6B` | Texte secondaire                                                   |
+| `muted-ink`   | `#6B6B7A` | Texte secondaire neutre (gris)                                     |
+| `muted-soft`  | `#9A9AAA` | Texte tertiaire très discret                                       |
+| `fill`        | `#F4F4F8` | Remplissage pâle (inputs, segmented, placeholders)                 |
+| `fill-mute`   | `#ECECF2` | Remplissage atténué / hairline                                     |
+| `input`       | `#FFFFFF` | Fond des contrôles de formulaire (blanc en light)                  |
 
 ### Couleurs — sémantiques
-| Token | Valeur | Usage |
-|---|---|---|
-| `ink-strong` | `#0F1A14` | Titres de l'app |
-| `link` | `#3F7A57` | Liens texte verts inline |
-| `success` | `#1F8A4C` | Positif / envoyé / tendance ↑ |
-| `success-soft` | `#E4F4EA` | Fond pâle de succès |
-| `danger` | `#C5402E` | Destructif / erreurs |
-| `warning` | `#C9810A` | Avertissement / non connecté |
-| `warning-soft` | `#F7EDDB` | Fond pâle d'avertissement |
-| `on-pine` | `#AECBB8` | Texte atténué sur surface pine |
-| `on-pine-bright` | `#CFE3D6` | Texte plus clair sur surface pine |
-| `cat-sector` / `cat-sector-soft` | `#1F4E8C` / `#EEF2FB` | Bleu — **back le badge `info`** (seule paire `cat-*` conservée) |
+
+| Token                            | Valeur                | Usage                                                   |
+| -------------------------------- | --------------------- | ------------------------------------------------------- |
+| `ink-strong`                     | `#0F1117`             | Titres de l'app                                         |
+| `link`                           | `#4F46E5`             | Liens texte accent inline                               |
+| `success`                        | `#1F8A4C`             | Positif / envoyé / tendance ↑                           |
+| `success-soft`                   | `#E4F4EA`             | Fond pâle de succès                                     |
+| `danger`                         | `#C5402E`             | Destructif / erreurs                                    |
+| `warning`                        | `#C9810A`             | Avertissement / non connecté                            |
+| `warning-soft`                   | `#F7EDDB`             | Fond pâle d'avertissement                               |
+| `on-pine`                        | `#A5B4FC`             | Texte atténué sur surface pine                          |
+| `on-pine-bright`                 | `#C7D2FE`             | Texte plus clair sur surface pine                       |
+| `cat-sector` / `cat-sector-soft` | `#1F4E8C` / `#EEF2FB` | Couleur du badge `info` (seule paire `cat-*` conservée) |
 
 ### Typographie
-| Token (classe) | Police | Usage |
-|---|---|---|
-| `font-display` | General Sans (500/600/700) | Titres (`Title`) |
-| `font-ui` | Geist | Corps de texte, UI, boutons (police par défaut du `<body>`) |
-| `font-mono` | Geist Mono | Labels mono en capitales trackées (`SectionLabel`) |
+
+| Token (classe) | Police                          | Usage                                                       |
+| -------------- | ------------------------------- | ----------------------------------------------------------- |
+| `font-display` | Plus Jakarta Sans (500/600/700) | Titres (`Title`)                                            |
+| `font-ui`      | Geist                           | Corps de texte, UI, boutons (police par défaut du `<body>`) |
+| `font-mono`    | Geist Mono                      | Labels mono en capitales trackées (`SectionLabel`)          |
 
 **Échelle de texte** : l'échelle Tailwind par défaut (`text-xs … text-6xl`) **plus** `text-2xs` (`0.625rem` / 10px) ajouté au petit bout pour les micro-labels UI.
 
 ### Spacing / radius / tracking / élévation
+
 - **Spacing** : échelle Tailwind par défaut (pas de tokens custom).
 - **Radius** : échelle Tailwind (`rounded-sm … rounded-2xl`) + token `--radius-card` (`1.25rem`). Boutons = rectangles arrondis (`rounded-lg`/`rounded-xl`), pas de pills ; badges = `rounded-full`.
 - **Tracking** : `tracking-caps` (`0.16em`) pour les labels mono en capitales.
 - **Ombres** : `shadow-drawer`, `shadow-float`, `shadow-sheet` (tiroir / flottant / bottom-sheet mobile).
 
 ### Dark mode & scoping
+
 - **Dark mode scopé** via une classe `.dark` **sur l'app shell** (pas sur `<html>`) : marketing/auth restent clairs. Les tokens sémantiques (`paper`, `sand`, `line`, `ink`, `muted`, `fill`, `input`, `success-soft`, `warning-soft`) basculent ; **pine/lime ne changent jamais**.
 - `.light-scope` **force le clair** dans un sous-arbre même sous `.dark` (cartes de modale, surfaces qui doivent rester claires). Toute surface pine re-fixe `paper` en clair pour garder son texte lisible.
 
@@ -65,19 +71,19 @@
 
 > **Obligatoire : composer ces primitives.** Pas de `<button className>` / `<h1 className>` / `<select className>` ad hoc. Merge de classes toujours via `cn()` (`lib/cn.ts`).
 
-| Composant | Props clés | Usage |
-|---|---|---|
-| `Button` | `variant` = `primary` \| `pine` \| `outline` \| `ghost` \| `subtle` \| `danger` · `size` = `sm` \| `md` \| `lg` \| `icon` · `href` | Toute action de type bouton. `primary` (lime) = accent fort ; `href` → rend un `Link` i18n |
-| `Title` | `as` = `h1` \| `h2` \| `h3` \| `h4` | Tous les titres. **La balise EST l'API** : h1 hero · h2 titre de page · h3 section · h4 label de carte |
-| `Text` | `size` = `xs` \| `sm` \| `base` · `tone` = `muted` \| `ink` \| `strong` · `leading` · `as` | Copy / paragraphes `<p>` |
-| `Badge` | `tone` = `neutral` \| `warning` \| `success` \| `danger` \| `info` \| `pine` \| `link` · `size` = `sm` \| `md` · `dot` | Pastilles de statut / label. Ex. « Non connecté » = `<Badge tone="warning" dot>` |
-| `Select` | `label` · `options: {value,label}[]` · props natives | Select natif stylé. Marche contrôlé **et** via `{...register(name)}` |
-| `Card` | `variant` = `surface` \| `pine` · `pad` = `sm` \| `md` \| `lg` · `as` = `div`\|`section`\|`aside`\|`article` | Bloc arrondi (radius/bordure/fond viennent d'ici). `StatCard` = variante métrique (label + valeur + trend) |
-| `Modal` | `open` · `onClose` · `title` · `size` = `sm`…`3xl` | Dialogue : bottom-sheet mobile (slide-up) / carte centrée ≥sm, backdrop flou. Ferme sur Escape + clic backdrop. Gère le chrome, le body est à toi |
-| `Container` | `className` | Largeur max page (`max-w-6xl`) + gouttières responsives |
-| `SectionLabel` | `index` · `tone` = `muted` \| `lime` \| `pine` | Kicker numéroté en Geist Mono capitales trackées |
-| `LocaleSwitcher` / `LocaleMenu` | — | Sélecteur de langue |
-| `Lightbox` | — | Visionneuse d'image en overlay |
+| Composant                       | Props clés                                                                                                                         | Usage                                                                                                                                             |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Button`                        | `variant` = `primary` \| `pine` \| `outline` \| `ghost` \| `subtle` \| `danger` · `size` = `sm` \| `md` \| `lg` \| `icon` · `href` | Toute action de type bouton. `primary` (lime) = accent fort ; `href` → rend un `Link` i18n                                                        |
+| `Title`                         | `as` = `h1` \| `h2` \| `h3` \| `h4`                                                                                                | Tous les titres. **La balise EST l'API** : h1 hero · h2 titre de page · h3 section · h4 label de carte                                            |
+| `Text`                          | `size` = `xs` \| `sm` \| `base` · `tone` = `muted` \| `ink` \| `strong` · `leading` · `as`                                         | Copy / paragraphes `<p>`                                                                                                                          |
+| `Badge`                         | `tone` = `neutral` \| `warning` \| `success` \| `danger` \| `info` \| `pine` \| `link` · `size` = `sm` \| `md` · `dot`             | Pastilles de statut / label. Ex. « Non connecté » = `<Badge tone="warning" dot>`                                                                  |
+| `Select`                        | `label` · `options: {value,label}[]` · props natives                                                                               | Select natif stylé. Marche contrôlé **et** via `{...register(name)}`                                                                              |
+| `Card`                          | `variant` = `surface` \| `pine` · `pad` = `sm` \| `md` \| `lg` · `as` = `div`\|`section`\|`aside`\|`article`                       | Bloc arrondi (radius/bordure/fond viennent d'ici). `StatCard` = variante métrique (label + valeur + trend)                                        |
+| `Modal`                         | `open` · `onClose` · `title` · `size` = `sm`…`3xl`                                                                                 | Dialogue : bottom-sheet mobile (slide-up) / carte centrée ≥sm, backdrop flou. Ferme sur Escape + clic backdrop. Gère le chrome, le body est à toi |
+| `Container`                     | `className`                                                                                                                        | Largeur max page (`max-w-6xl`) + gouttières responsives                                                                                           |
+| `SectionLabel`                  | `index` · `tone` = `muted` \| `lime` \| `pine`                                                                                     | Kicker numéroté en Geist Mono capitales trackées                                                                                                  |
+| `LocaleSwitcher` / `LocaleMenu` | —                                                                                                                                  | Sélecteur de langue                                                                                                                               |
+| `Lightbox`                      | —                                                                                                                                  | Visionneuse d'image en overlay                                                                                                                    |
 
 ## Patterns UI imposés
 
@@ -106,7 +112,7 @@
 
 Ces tokens/polices existent dans `applyzi-flagship` pour l'artefact CV imprimé. ui-starter n'a **pas** de domaine CV — ne pas les recréer dans `@theme` :
 
-- **Polices serif** : `font-serif` (Fraunces), `font-read` (Newsreader) + leurs `@import` — servent uniquement le CV généré.
+- **Polices serif** : `font-serif` (Fraunces), `font-read` (Newsreader) — servent uniquement le CV généré.
 - **Couleurs de catégories de compétences** : `cat-tools` / `cat-tools-soft`, `cat-people` / `cat-people-dot` / `cat-people-soft` (la paire `cat-sector*` reste, elle back le badge `info`).
 - **Impression / PDF** : `#cv-print`, `.print-page` et les règles `@media print`.
 - **Animation d'onboarding « import »** : keyframes/classes `ob-*` (décoratif, spécifique au flux CV).

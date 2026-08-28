@@ -29,7 +29,7 @@ export default async function PricingPage({
       <header className="px-5 pt-3.5">
         <Container className="flex h-[62px] items-center justify-between">
           <Link href="/" aria-label="Home">
-            <Logo />
+            <Logo variant="light" />
           </Link>
           <Button
             href="/dashboard"

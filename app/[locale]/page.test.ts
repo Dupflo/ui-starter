@@ -131,3 +131,25 @@ describe("landing page — s08-i18n: minimal pine header (Logo + LocaleMenu)", (
     ).toContain("bg-pine")
   })
 })
+
+// ─── s10-defect-sweep T3: wordmark contrast on pricing (bg-paper surface) ──
+
+describe("pricing page — s10-defect-sweep T3: readable wordmark on bg-paper", () => {
+  it('renders <Logo variant="light" /> — bg-paper cannot use the default dark variant', () => {
+    expect(
+      pricingPageSource,
+      'pricing/page.tsx renders <Logo /> on a bg-paper surface; the default variant="dark" sets the wordmark to text-paper, matching the background 1:1. Must pass variant="light" (wordmark text-pine) instead.',
+    ).toMatch(/<Logo\s+variant="light"\s*\/>/)
+  })
+})
+
+// ─── s10-defect-sweep F1: page banner is non-content chrome, hidden on print ──
+
+describe("landing page — s10-defect-sweep F1: header hidden on print", () => {
+  it("landing header carries print-hide (bg-pine chrome invisible on print otherwise)", () => {
+    expect(
+      landingSource,
+      'page.tsx <header className="bg-pine"> must also carry "print-hide" — browsers drop descendant background-color when printing without Background graphics, so the paper/lime wordmark would print invisible on a white page instead',
+    ).toMatch(/<header className="bg-pine print-hide">/)
+  })
+})

@@ -21,7 +21,7 @@ export default async function LegalLayout({
 
   return (
     <div className="min-h-dvh bg-paper text-ink">
-      <header className="bg-pine">
+      <header className="bg-pine print-hide">
         <Container className="flex items-center justify-between py-4">
           <Link href="/" aria-label={t("backHome")}>
             <Logo />
@@ -37,7 +37,7 @@ export default async function LegalLayout({
 
       <Container className="py-12 md:py-16">
         <article className="mx-auto max-w-2xl">{children}</article>
-        <nav className="mx-auto mt-16 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 border-t border-line pt-6 text-xs text-muted">
+        <nav className="mx-auto mt-16 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 border-t border-line pt-6 text-xs text-muted print-hide">
           <Link href="/mentions-legales" className="hover:text-pine">
             {t("mentionsLegales")}
           </Link>

@@ -52,7 +52,7 @@ export function MobileSidebar() {
               onClick={() => setOpen(false)}
               aria-hidden="true"
             />
-            <div className="overlay-drawer light-scope absolute inset-y-0 left-0 w-64 overflow-y-auto bg-pine px-4 py-6 shadow-drawer">
+            <div className="overlay-drawer light-scope absolute inset-y-0 left-0 w-64 overflow-y-auto bg-pine px-4 py-6 shadow-drawer print-hide">
               <SidebarNav onNavigate={() => setOpen(false)} />
             </div>
           </div>,

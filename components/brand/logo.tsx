@@ -18,7 +18,10 @@ export function Logo({
   const body = variant === "dark" ? "fill-lime" : "fill-pine"
   const tick = variant === "dark" ? "fill-paper" : "fill-lime"
   const wordmark = variant === "dark" ? "text-paper" : "text-pine"
-  const wordmarkAccent = variant === "dark" ? "text-lime" : "text-lime"
+  // Light register can't reuse `text-lime`: the lime token on the paper
+  // background is 2.84:1, failing WCAG AA (4.5:1). The `link` token on paper
+  // is 5.98:1 — passes.
+  const wordmarkAccent = variant === "dark" ? "text-lime" : "text-link"
 
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>

@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing"
 import { CookieBanner } from "@/components/cookie-banner"
 import { Analytics } from "@/components/analytics"
 import { ClientErrorReporter } from "@/components/observability/client-error-reporter"
+import { plusJakartaSans, geist, geistMono } from "@/app/fonts"
 import "../globals.css"
 
 export async function generateMetadata({
@@ -40,7 +41,10 @@ export default async function LocaleLayout({
   setRequestLocale(locale)
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      className={`${plusJakartaSans.variable} ${geist.variable} ${geistMono.variable}`}
+    >
       <body>
         <NextIntlClientProvider>
           {children}

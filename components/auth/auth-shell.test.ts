@@ -40,3 +40,37 @@ describe("auth-shell — s08-i18n: LocaleMenu mounted on the pine canvas", () =>
     ).not.toContain('"use client"')
   })
 })
+
+// ─── s10-defect-sweep F1: branding chrome hidden on print ─────────────────────
+//
+// AuthShell has no <header> tag — its bg-pine canvas wraps the locale switcher,
+// the Logo and the footer disclaimer directly. All three are non-content
+// chrome (the printable content, if any, is the form card, which already
+// sits on a light bg-input surface). Each must carry print-hide individually.
+
+describe("auth-shell — s10-defect-sweep F1: chrome hidden on print", () => {
+  it("locale switcher wrapper carries print-hide", () => {
+    expect(
+      src,
+      'auth-shell.tsx locale switcher wrapper div must carry "print-hide" — its text-paper trigger prints invisible on the pine canvas',
+    ).toMatch(
+      /className="absolute right-4 top-4 sm:right-6 sm:top-6 print-hide"/,
+    )
+  })
+
+  it("logo wrapper carries print-hide", () => {
+    expect(
+      src,
+      'auth-shell.tsx Logo wrapper div must carry "print-hide" — the text-paper wordmark prints invisible on the pine canvas',
+    ).toMatch(/className="mb-6 flex justify-center print-hide"/)
+  })
+
+  it("footer disclaimer carries print-hide", () => {
+    expect(
+      src,
+      'auth-shell.tsx footer <p> must carry "print-hide" — its text-on-pine text prints invisible on the pine canvas',
+    ).toMatch(
+      /className="mt-5 text-center font-mono text-2xs uppercase tracking-caps text-on-pine print-hide"/,
+    )
+  })
+})

@@ -23,15 +23,9 @@ const eslintConfig = [
       ],
       // React Compiler (react-hooks v6) is over-strict here: it flags legitimate
       // external-sync effects (URL↔tab state, mount/exit animation, debounced
-      // Typst compile). Keep them visible as warnings instead of hard errors.
+      // effects). Keep them visible as warnings instead of hard errors.
       "react-hooks/set-state-in-effect": "warn",
     },
-  },
-  {
-    // Legacy HTML preview, superseded by typst-preview.tsx (Typst WASM) and slated
-    // for removal — exempt it from the "components defined in render" rule.
-    files: ["components/app/cv-builder/preview.tsx"],
-    rules: { "react-hooks/static-components": "off" },
   },
 ]
 

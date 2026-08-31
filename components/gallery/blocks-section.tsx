@@ -1,0 +1,247 @@
+import type { ReactNode } from "react"
+import { Title } from "@/components/ui/title"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Example } from "@/components/gallery/example"
+import { TextFieldDemo } from "@/components/gallery/text-field-demo"
+import type { Snippet } from "@/components/gallery/snippet"
+
+type CopyLabels = { copy: string; copied: string }
+
+export type BlocksLabels = CopyLabels & {
+  pageHeaderName: string
+  pricingName: string
+  formName: string
+  emptyName: string
+  statRowName: string
+  pageHeaderTitle: string
+  pageHeaderSubtitle: string
+  pageHeaderCta: string
+  pricingKicker: string
+  pricingBadge: string
+  pricingTitle: string
+  pricingPrice: string
+  pricingCta: string
+  formTitle: string
+  formEmailLabel: string
+  formPasswordLabel: string
+  formCta: string
+  emptyTitle: string
+  emptyBody: string
+  emptyCta: string
+  statLabel1: string
+  statLabel2: string
+  statLabel3: string
+}
+
+/**
+ * T5 (s12-ui-gallery) — five blocks assembled only from existing
+ * `components/ui` primitives (Container, Card, Title, Text, Button, Badge,
+ * SectionLabel, TextField, StatCard) — no primitive invented. Each block is
+ * one `Snippet` tree, so its rendered preview and its copyable code (T3)
+ * come from the same source as the primitives above.
+ */
+export function BlocksSection({ labels }: { labels: BlocksLabels }) {
+  const copyLabels: CopyLabels = { copy: labels.copy, copied: labels.copied }
+
+  const blocks: { name: string; snippet: Snippet; render?: ReactNode }[] = [
+    // Page header — Container + Title + Text + Button, as on /dashboard.
+    {
+      name: labels.pageHeaderName,
+      snippet: {
+        component: "Container",
+        children: [
+          {
+            component: "Title",
+            props: { as: "h1" },
+            children: labels.pageHeaderTitle,
+          },
+          {
+            component: "Text",
+            props: { size: "base", leading: true },
+            children: labels.pageHeaderSubtitle,
+          },
+          {
+            component: "Button",
+            props: { variant: "primary" },
+            children: labels.pageHeaderCta,
+          },
+        ],
+      },
+    },
+    // Pricing section — Card + Badge + Button + SectionLabel, as on /pricing.
+    {
+      name: labels.pricingName,
+      snippet: {
+        component: "Card",
+        props: { pad: "lg" },
+        children: [
+          {
+            component: "SectionLabel",
+            props: { index: "01" },
+            children: labels.pricingKicker,
+          },
+          {
+            component: "Badge",
+            props: { tone: "pine" },
+            children: labels.pricingBadge,
+          },
+          {
+            component: "Title",
+            props: { as: "h2" },
+            children: labels.pricingTitle,
+          },
+          {
+            component: "Text",
+            props: { size: "base" },
+            children: labels.pricingPrice,
+          },
+          {
+            component: "Button",
+            props: { variant: "primary" },
+            children: labels.pricingCta,
+          },
+        ],
+      },
+    },
+    // Form — FieldLabel + TextField + Button, as in the auth screens.
+    //
+    // The wrapper's spacing (`mt-3 space-y-3`) and the Button's `mt-4` are
+    // both expressed as `className` props IN the snippet below (plain HTML
+    // "div" node — see snippet.ts), so `codeOf` shows them too: review fix
+    // (s12-ui-gallery, major 2) — they used to exist only in `render`, so
+    // the copyable code silently omitted layout visible in the preview.
+    //
+    // ESCAPE HATCH: `render` is still needed for the two TextField leaves —
+    // TextField spreads a react-hook-form-shaped `registration` (incl. a
+    // `ref` callback) onto its <input>; React refuses that from a Server
+    // Component render pass ("Refs cannot be used in Server Components"),
+    // reproduced with a real `DEMO_MODE=1 next build`. That is now the ONLY
+    // divergence between this `render` and `renderSnippet(snippet)`: every
+    // other node (Card, Title, the div, Button) is identical to the snippet.
+    {
+      name: labels.formName,
+      snippet: {
+        component: "Card",
+        props: { pad: "lg" },
+        children: [
+          {
+            component: "Title",
+            props: { as: "h3" },
+            children: labels.formTitle,
+          },
+          {
+            component: "div",
+            props: { className: "mt-3 space-y-3" },
+            children: [
+              {
+                component: "TextField",
+                props: {
+                  label: labels.formEmailLabel,
+                  type: "email",
+                  registration: { code: 'register("email")', value: {} },
+                },
+              },
+              {
+                component: "TextField",
+                props: {
+                  label: labels.formPasswordLabel,
+                  type: "password",
+                  registration: { code: 'register("password")', value: {} },
+                },
+              },
+            ],
+          },
+          {
+            component: "Button",
+            props: { variant: "primary", className: "mt-4" },
+            children: labels.formCta,
+          },
+        ],
+      },
+      // ESCAPE HATCH: TextField's ref-bearing `registration` (see the
+      // comment above this block for why) — everything else in this tree
+      // is identical to the snippet above.
+      render: (
+        <Card pad="lg">
+          <Title as="h3">{labels.formTitle}</Title>
+          <div className="mt-3 space-y-3">
+            <TextFieldDemo
+              label={labels.formEmailLabel}
+              type="email"
+              name="email"
+            />
+            <TextFieldDemo
+              label={labels.formPasswordLabel}
+              type="password"
+              name="password"
+            />
+          </div>
+          <Button variant="primary" className="mt-4">
+            {labels.formCta}
+          </Button>
+        </Card>
+      ),
+    },
+    // Empty state — Card + Title + Text + Button.
+    {
+      name: labels.emptyName,
+      snippet: {
+        component: "Card",
+        props: { pad: "lg" },
+        children: [
+          {
+            component: "Title",
+            props: { as: "h3" },
+            children: labels.emptyTitle,
+          },
+          {
+            component: "Text",
+            props: { size: "sm" },
+            children: labels.emptyBody,
+          },
+          {
+            component: "Button",
+            props: { variant: "subtle" },
+            children: labels.emptyCta,
+          },
+        ],
+      },
+    },
+    // Stat row — StatCard ×3.
+    {
+      name: labels.statRowName,
+      snippet: {
+        component: "Container",
+        props: { className: "flex flex-wrap gap-4" },
+        children: [
+          {
+            component: "StatCard",
+            props: { label: labels.statLabel1, value: "1,204", trend: "+12%" },
+          },
+          {
+            component: "StatCard",
+            props: { label: labels.statLabel2, value: "84%", trend: "+3%" },
+          },
+          {
+            component: "StatCard",
+            props: { label: labels.statLabel3, value: "€9,400" },
+          },
+        ],
+      },
+    },
+  ]
+
+  return (
+    <div className="mt-10 space-y-10">
+      {blocks.map(({ name, snippet, render }, i) => (
+        <section key={i}>
+          <Title as="h4">{name}</Title>
+          <div className="mt-4">
+            <Example snippet={snippet} labels={copyLabels} render={render} />
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}

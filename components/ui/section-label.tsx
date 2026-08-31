@@ -1,8 +1,8 @@
 import { cn } from "@/lib/cn"
 
-type Tone = "muted" | "lime" | "pine"
+export type Tone = "muted" | "lime" | "pine"
 
-const tones: Record<Tone, string> = {
+export const tones: Record<Tone, string> = {
   muted: "text-muted",
   lime: "text-lime",
   pine: "text-pine/60",

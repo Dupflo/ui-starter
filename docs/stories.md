@@ -315,3 +315,38 @@ s01 à s08 (tous les écrans doivent exister pour être peuplés), s10-defect-sw
 - **Trap** : `proxy.ts` rafraîchit la session Supabase ; le mode démo doit fournir sa propre identité sans casser la règle « rien entre `createServerClient` et `getUser()` » sur le chemin réel.
 - **Risk** : le mode démo est un chemin d'exécution parallèle — le risque n°1 est qu'il fuite en production. Tester explicitement que le flag absent = comportement d'origine.
 - Aucune string UI en dur (bandeau + menu démo passent par i18n fr+en), aucune couleur hors tokens.
+
+---
+
+## Story s12-ui-gallery — Galerie de composants et blocs
+
+**As a** builder **I want** une page qui montre toutes les primitives UI et des blocs prêts à assembler, avec leur code à copier, **so that** je compose un écran sans ouvrir les fichiers ni réinventer ce qui existe.
+
+### Complexity
+
+3
+
+### Acceptance criteria
+
+- [ ] Une route `/ui` rend **deux niveaux** : les primitives de `components/ui/*` puis des blocs composés.
+- [ ] **Primitives** : chaque composant apparaît avec toutes ses variantes, tons, tailles et états réels (dont `disabled` et l'état d'erreur quand il existe). Les valeurs affichées sont **dérivées des composants**, pas recopiées — une variante ajoutée apparaît sans toucher à la galerie.
+- [ ] **Une primitive nouvellement ajoutée ne peut pas manquer en silence** : un test lit `components/ui/*.tsx` et échoue si un composant exporté n'a pas d'entrée dans la galerie.
+- [ ] **Blocs** : au moins 5 assemblages réutilisables (en-tête de page, section pricing, formulaire, état vide, ligne de stats), composés uniquement de primitives existantes.
+- [ ] Chaque item expose son JSX, copiable en un geste, et **le code affiché ne peut pas diverger du rendu** (source unique, garantie par un test).
+- [ ] **Visibilité** : `/ui` répond en développement et en mode démo, et **404 sur un build de production normal** — la galerie est un outil d'atelier, pas une surface produit d'un SaaS forké.
+- [ ] Design system respecté : zéro couleur brute, zéro composant inventé, toutes les strings en i18n fr+en.
+- [ ] Rend correctement en clair **et** en sombre.
+- [ ] `npm run test`, `test:build`, `lint:design`, `typecheck`, `build`, `lint` passent.
+
+### Dependencies
+
+s02 (tokens), s10 (design system à jour), s11 (mode démo — la galerie réutilise `isDemoMode()`).
+
+### Agentic notes
+
+- Primitives à couvrir : `badge`, `button`, `card`, `container`, `lightbox`, `locale-menu`, `locale-switcher`, `modal`, `section-label`, `select`, `text-field`, `text`, `title`.
+- **Trap** : les tables de variantes sont aujourd'hui des `const` privées au module (`button.tsx` `Variant`/`Size`, `card.tsx` `CardVariant`, `title.tsx` `looks`…). Sans les exporter, la galerie ne peut que les recopier — et devient la troisième doc de ce repo à dériver du code, après `docs/design-system.md` et le bandeau démo.
+- **Trap** : afficher le JSX ET le rendu depuis deux sources garantit la divergence dans la boucle la plus courte possible.
+- **Trap** : `Modal` et `Lightbox` montent un portail et ont un état ouvert/fermé ; `LocaleSwitcher`/`LocaleMenu` naviguent au changement.
+- **Trap** : `check-design-tokens` refuse tout hex brut dans `app|components|lib` — les pastilles de couleur passent par des classes de token.
+- **Risk** : la tentation d'inventer un composant « juste pour la galerie ». Un besoin non couvert est un **design system gap** à signaler, jamais à combler ici.

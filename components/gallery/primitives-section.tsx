@@ -15,20 +15,19 @@ import {
   tones as textTones,
 } from "@/components/ui/text"
 import { tones as sectionLabelTones } from "@/components/ui/section-label"
-import { Example } from "@/components/gallery/example"
+import { Example, type ExampleLabels } from "@/components/gallery/example"
 import { ModalDemo } from "@/components/gallery/modal-demo"
 import { LightboxDemo } from "@/components/gallery/lightbox-demo"
 import { TextFieldDemo } from "@/components/gallery/text-field-demo"
 import type { Snippet } from "@/components/gallery/snippet"
 
-type CopyLabels = { copy: string; copied: string }
 type GridItem = {
   snippet: Snippet
   render?: ReactNode
   previewClassName?: string
 }
 
-export type PrimitivesLabels = CopyLabels & {
+export type PrimitivesLabels = ExampleLabels & {
   disabledLabel: string
   errorExample: string
   fieldLabelExample: string
@@ -37,11 +36,19 @@ export type PrimitivesLabels = CopyLabels & {
   selectOptionALabel: string
   selectOptionBLabel: string
   statLabelExample: string
-  modalTrigger: string
+  /** T4 (s13-gallery-ergonomics) — RAW i18n template with a literal
+   *  "{size}" placeholder (e.g. "Ouvrir ({size})", from `t.raw()` — not
+   *  `t()`), interpolated per size in `ModalDemo` (see its doc comment for
+   *  why the derivation lives there, not here). */
+  modalTriggerTemplate: string
   modalTitle: string
   modalBody: string
   lightboxTrigger: string
   lightboxCaption: string
+  /** Review fix (s13-gallery-ergonomics, minor 3) — caption for the second
+   *  `sample.png` slide LightboxDemo lists, so prev/next has two distinct
+   *  captions to cycle between (see LightboxDemo's own doc comment). */
+  lightboxCaptionAlt: string
   lightboxClose: string
   lightboxPrev: string
   lightboxNext: string
@@ -55,13 +62,18 @@ export type PrimitivesLabels = CopyLabels & {
  * variant added, renamed or removed there shows up here automatically.
  */
 export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
-  const copyLabels: CopyLabels = { copy: labels.copy, copied: labels.copied }
+  const exampleLabels: ExampleLabels = {
+    copy: labels.copy,
+    copied: labels.copied,
+    codeShow: labels.codeShow,
+    codeHide: labels.codeHide,
+  }
 
   return (
     <div className="mt-10 space-y-14">
       <PrimitiveGroup name="Button">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             ...Object.keys(buttonVariants).map(
               (variant): GridItem => ({
@@ -94,7 +106,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Badge">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             ...Object.keys(badgeTones).map(
               (tone): GridItem => ({
@@ -127,7 +139,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Card / StatCard">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             ...Object.keys(cardVariants).map(
               (variant): GridItem => ({
@@ -163,7 +175,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Title">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={Object.keys(titleLooks).map(
             (as): GridItem => ({
               snippet: { component: "Title", props: { as }, children: as },
@@ -174,7 +186,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Text">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             ...Object.keys(textSizes).map(
               (size): GridItem => ({
@@ -192,7 +204,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="SectionLabel">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={Object.keys(sectionLabelTones).map(
             (tone): GridItem => ({
               snippet: {
@@ -207,7 +219,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Container">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             {
               snippet: {
@@ -224,7 +236,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Select">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             {
               snippet: {
@@ -247,7 +259,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="FieldLabel / TextField">
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             {
               snippet: {
@@ -303,13 +315,14 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Modal">
         <Example
-          labels={copyLabels}
+          labels={exampleLabels}
           snippet={{
             component: "Modal",
             props: {
               open: { code: "open", value: true },
               onClose: { code: "() => setOpen(false)", value: () => {} },
               title: labels.modalTitle,
+              size: "md",
             },
             children: {
               component: "Text",
@@ -320,11 +333,15 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
           // ESCAPE HATCH: Modal is controlled (open/onClose) and mounts a
           // portal-like overlay — it needs a trigger and local state, which a
           // static snippet render cannot provide. ModalDemo (see its own doc
-          // comment) is that stateful wrapper; the snippet above is what it
-          // actually renders once open.
+          // comment) is that stateful wrapper. The snippet's `size: "md"`
+          // pins Modal's own default (components/ui/modal.tsx) — ModalDemo
+          // opens every other size live too (T4), but the copyable code can
+          // only ever show one value, so it shows the default rather than
+          // omitting the prop this story exists to demonstrate. Still a
+          // single `render` usage — no new escape hatch.
           render={
             <ModalDemo
-              triggerLabel={labels.modalTrigger}
+              triggerLabelTemplate={labels.modalTriggerTemplate}
               title={labels.modalTitle}
               body={labels.modalBody}
             />
@@ -334,7 +351,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
 
       <PrimitiveGroup name="Lightbox">
         <Example
-          labels={copyLabels}
+          labels={exampleLabels}
           snippet={{
             component: "Lightbox",
             props: {
@@ -368,6 +385,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
             <LightboxDemo
               triggerLabel={labels.lightboxTrigger}
               caption={labels.lightboxCaption}
+              captionAlt={labels.lightboxCaptionAlt}
               labels={{
                 close: labels.lightboxClose,
                 prev: labels.lightboxPrev,
@@ -383,7 +401,7 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
           {labels.localeCaption}
         </Text>
         <ExampleGrid
-          labels={copyLabels}
+          labels={exampleLabels}
           items={[
             {
               snippet: { component: "LocaleMenu" },
@@ -420,7 +438,7 @@ function ExampleGrid({
   labels,
 }: {
   items: GridItem[]
-  labels: CopyLabels
+  labels: ExampleLabels
 }) {
   return (
     <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -70,11 +70,17 @@ export default async function UiGalleryPage({
                 selectOptionALabel: t("selectOptionALabel"),
                 selectOptionBLabel: t("selectOptionBLabel"),
                 statLabelExample: t("statLabelExample"),
-                modalTrigger: t("modalTrigger"),
+                codeShow: t("codeShow"),
+                codeHide: t("codeHide"),
+                // t.raw(), not t(): the "{size}" placeholder is interpolated
+                // client-side, once per Modal size (see ModalDemo's doc
+                // comment for why the derivation lives there).
+                modalTriggerTemplate: t.raw("modalTriggerFor"),
                 modalTitle: t("modalTitle"),
                 modalBody: t("modalBody"),
                 lightboxTrigger: t("lightboxTrigger"),
                 lightboxCaption: t("lightboxCaption"),
+                lightboxCaptionAlt: t("lightboxCaptionAlt"),
                 lightboxClose: t("lightboxClose"),
                 lightboxPrev: t("lightboxPrev"),
                 lightboxNext: t("lightboxNext"),
@@ -89,6 +95,8 @@ export default async function UiGalleryPage({
               labels={{
                 copy: t("copy"),
                 copied: t("copied"),
+                codeShow: t("codeShow"),
+                codeHide: t("codeHide"),
                 pageHeaderName: t("blockPageHeaderName"),
                 pricingName: t("blockPricingName"),
                 formName: t("blockFormName"),

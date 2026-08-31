@@ -2,13 +2,11 @@ import type { ReactNode } from "react"
 import { Title } from "@/components/ui/title"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Example } from "@/components/gallery/example"
+import { Example, type ExampleLabels } from "@/components/gallery/example"
 import { TextFieldDemo } from "@/components/gallery/text-field-demo"
 import type { Snippet } from "@/components/gallery/snippet"
 
-type CopyLabels = { copy: string; copied: string }
-
-export type BlocksLabels = CopyLabels & {
+export type BlocksLabels = ExampleLabels & {
   pageHeaderName: string
   pricingName: string
   formName: string
@@ -42,7 +40,12 @@ export type BlocksLabels = CopyLabels & {
  * come from the same source as the primitives above.
  */
 export function BlocksSection({ labels }: { labels: BlocksLabels }) {
-  const copyLabels: CopyLabels = { copy: labels.copy, copied: labels.copied }
+  const exampleLabels: ExampleLabels = {
+    copy: labels.copy,
+    copied: labels.copied,
+    codeShow: labels.codeShow,
+    codeHide: labels.codeHide,
+  }
 
   const blocks: { name: string; snippet: Snippet; render?: ReactNode }[] = [
     // Page header — Container + Title + Text + Button, as on /dashboard.
@@ -238,7 +241,7 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
         <section key={i}>
           <Title as="h4">{name}</Title>
           <div className="mt-4">
-            <Example snippet={snippet} labels={copyLabels} render={render} />
+            <Example snippet={snippet} labels={exampleLabels} render={render} />
           </div>
         </section>
       ))}

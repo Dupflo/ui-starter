@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { COMPONENTS } from "@/components/gallery/components-map"
-import { CopyButton } from "@/components/gallery/copy-button"
+import { CodeDisclosure } from "@/components/gallery/code-disclosure"
 import { cn } from "@/lib/cn"
 import {
   codeOf,
@@ -8,13 +8,21 @@ import {
   type Snippet,
 } from "@/components/gallery/snippet"
 
+export type ExampleLabels = {
+  copy: string
+  copied: string
+  codeShow: string
+  codeHide: string
+}
+
 /**
- * One primitive/block example: the live render on top, its exact code
- * below. Every registered component reaches this — server component, the
- * only client bit inside is `CopyButton`. There is no bypass: fifteen
- * primitives, fifteen code blocks (review fix, s12-ui-gallery — `Modal`,
- * `Lightbox`, `LocaleMenu`, `LocaleSwitcher` used to render outside
- * `Example` entirely and had none).
+ * One primitive/block example: the live render on top, its collapsible code
+ * underneath. Every registered component reaches this — server component,
+ * the only client bit inside is `CodeDisclosure` (s13-gallery-ergonomics:
+ * collapsed by default, per-item state, still delegates to `CopyButton`).
+ * There is no bypass: fifteen primitives, fifteen code blocks (review fix,
+ * s12-ui-gallery — `Modal`, `Lightbox`, `LocaleMenu`, `LocaleSwitcher` used
+ * to render outside `Example` entirely and had none).
  *
  * By default the live render comes from `renderSnippet(snippet)` — the same
  * `Snippet` `codeOf` reads, so the two cannot diverge (see snippet.ts).
@@ -36,7 +44,7 @@ export function Example({
   previewClassName,
 }: {
   snippet: Snippet
-  labels: { copy: string; copied: string }
+  labels: ExampleLabels
   render?: ReactNode
   /** Preview-area background override for components styled for a
    *  non-default surface (e.g. `LocaleMenu`/`LocaleSwitcher`, designed for
@@ -55,12 +63,7 @@ export function Example({
       >
         {render ?? renderSnippet(snippet, COMPONENTS)}
       </div>
-      <div className="flex items-start justify-between gap-3 border-t border-line bg-fill px-4 py-3">
-        <pre className="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-xs text-muted">
-          <code>{code}</code>
-        </pre>
-        <CopyButton code={code} labels={labels} />
-      </div>
+      <CodeDisclosure code={code} labels={labels} />
     </div>
   )
 }

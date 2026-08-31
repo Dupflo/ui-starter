@@ -350,3 +350,72 @@ s02 (tokens), s10 (design system à jour), s11 (mode démo — la galerie réuti
 - **Trap** : `Modal` et `Lightbox` montent un portail et ont un état ouvert/fermé ; `LocaleSwitcher`/`LocaleMenu` naviguent au changement.
 - **Trap** : `check-design-tokens` refuse tout hex brut dans `app|components|lib` — les pastilles de couleur passent par des classes de token.
 - **Risk** : la tentation d'inventer un composant « juste pour la galerie ». Un besoin non couvert est un **design system gap** à signaler, jamais à combler ici.
+
+---
+
+## Story s13-gallery-ergonomics — Galerie lisible : code repliable et modales démontrables
+
+**As a** builder **I want** parcourir la galerie sans être noyé sous le code, et voir réellement les modales, **so that** je repère un composant d'un coup d'œil et je n'ouvre son code que quand j'en ai besoin.
+
+### Complexity
+
+2
+
+### Acceptance criteria
+
+- [ ] Le code de chaque item est **replié par défaut**, derrière un bouton « Voir le code » qui le déplie (et le replie).
+- [ ] L'état déplié/replié est **par item** — ouvrir le code d'un composant n'ouvre pas celui des autres.
+- [ ] Le bouton n'apparaît que là où il y a du code à montrer ; aucun bouton orphelin.
+- [ ] La copie du snippet reste possible ; décider explicitement si le bouton copier est visible replié ou seulement déplié, et le justifier.
+- [ ] **Modales réellement démontrables** : chaque taille de `Modal` (issue de la table `sizes` exportée, pas d'une liste recopiée) a son propre déclencheur ouvrable. Aujourd'hui la galerie affiche un unique bouton et liste les tailles en texte.
+- [ ] Idem pour `Lightbox` si sa surface le permet ; sinon le dire.
+- [ ] Le composant de repli est composé des primitives existantes ; un besoin non couvert est un **design system gap** à signaler.
+- [ ] Toutes les strings en i18n fr+en. Zéro couleur brute. Rend en clair et en sombre.
+- [ ] `npm run test`, `test:build`, `lint:design`, `typecheck`, `build`, `lint` passent.
+
+### Dependencies
+
+s12-ui-gallery.
+
+### Agentic notes
+
+- Le repli implique un état local → Client Component. Garder la frontière client aussi petite que possible : le corps de la galerie reste serveur, seul le conteneur repliable est client.
+- **Trap** : le garde-fou `escape-hatch.test.ts` épingle le nombre d'échappatoires `render` (5) et exige un commentaire de justification. Ajouter un déclencheur par taille de modale peut en créer de nouvelles — les justifier et bumper le compteur délibérément, jamais le contourner.
+- **Trap** : la liste des tailles de modale doit venir de `sizes` (exporté par `components/ui/modal.tsx` en s12), sinon la galerie recommence à dériver.
+- **Risk** : le repli par défaut casse la garantie de s12 « chaque item expose son JSX » si le code devient inaccessible. Il doit rester atteignable en un geste, et le test qui compte les blocs de code doit continuer à les voir.
+
+---
+
+## Story s14-dataviz-and-combobox — Combobox et graphiques
+
+**As a** builder **I want** un champ combobox et des composants de graphique dans le design system, **so that** je compose un formulaire riche et un dashboard chiffré sans partir de zéro ni improviser hors système.
+
+### Complexity
+
+4
+
+### Acceptance criteria
+
+- [ ] **Combobox** : champ de saisie avec liste filtrable, sélection au clavier (flèches, Entrée, Échap) et à la souris, état vide, état désactivé.
+- [ ] Le combobox est accessible : rôles ARIA corrects, focus géré, utilisable sans souris. Une combobox inaccessible est un défaut, pas une limite.
+- [ ] **Graphiques** : au moins ligne, barres et donut, encapsulés dans `components/ui/chart-*.tsx` — **aucun écran n'importe Recharts directement** (ADR 006 : c'est ce qui rend la décision réversible).
+- [ ] Les couleurs des graphes viennent des tokens (`var(--color-…)`), jamais d'un hex littéral ; `check-design-tokens` reste vert.
+- [ ] Les graphes rendent correctement en clair **et** en sombre — les couleurs suivent le re-theme.
+- [ ] Le **poids réel ajouté au bundle est mesuré et inscrit** dans la story (ADR 006 l'exige explicitement : mesuré, pas estimé).
+- [ ] Les nouveaux composants apparaissent dans la galerie via le registre existant, et le test « une primitive ne peut pas manquer en silence » les couvre sans modification.
+- [ ] `docs/design-system.md` gagne les sections correspondantes, décrivant ce qui est réellement livré.
+- [ ] Toutes les strings en i18n fr+en. Rend en clair et en sombre.
+- [ ] Gates verts, dont `lint:design`.
+
+### Dependencies
+
+s12-ui-gallery, s13-gallery-ergonomics, ADR 006.
+
+### Agentic notes
+
+- **ADR 006** décide Recharts et impose l'encapsulation. Le lire avant de commencer.
+- **Trap** : Recharts embarque des **couleurs de série par défaut** (`#8884d8`…), appliquées dès qu'aucun `fill`/`stroke` n'est passé. `check-design-tokens` ne parcourt que `app|components|lib` : il n'a aucune visibilité dessus. Un graphe sans couleur explicite rendra donc hors palette **avec un build vert**, et ne suivra pas le mode sombre. Chaque série reçoit sa couleur explicitement, via `var(--color-…)`, et ça se vérifie sur le rendu — pas sur le lint.
+- **Trap** : Recharts est client-only. Les composants de graphe sont des Client Components ; ne pas contaminer les pages serveur.
+- **Trap** : le mode sombre change les valeurs des tokens. Un graphe qui lit une couleur une seule fois au montage ne suivra pas la bascule — vérifier réellement, pas au raisonnement.
+- **Risk** : la tentation d'exposer toute l'API Recharts « au cas où ». L'encapsulation ne vaut que si elle est étroite ; une story ultérieure élargira si le besoin se présente.
+- Le combobox n'existe dans aucune bibliothèque du projet : il est à écrire. Ne pas introduire de dépendance supplémentaire pour lui sans un nouvel ADR.

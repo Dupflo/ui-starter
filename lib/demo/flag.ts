@@ -58,3 +58,21 @@ export function isDemoMode(): boolean {
     return false
   }
 }
+
+/**
+ * Whether the component gallery (`app/[locale]/ui`) is visible: demo mode or
+ * local development. Originally a local function inside the route (s12-ui-
+ * gallery); pulled up here (follow-up to s12-ui-gallery, 31/08/2026) so the
+ * sidebar nav link (components/app/app-sidebar.tsx) and the route's own gate
+ * (app/[locale]/ui/page.tsx) call the exact same predicate instead of two
+ * copies that can drift — pinned by
+ * lib/demo/gallery-visibility.test.ts (parity + single-implementation
+ * guard).
+ *
+ * `process.env.NODE_ENV` is a distinct, Next-inlined constant, not
+ * `DEMO_MODE` — checking it here does not add a second `DEMO_MODE` reader,
+ * so lib/demo/flag.test.ts's guard is unaffected.
+ */
+export function isGalleryVisible(): boolean {
+  return isDemoMode() || process.env.NODE_ENV === "development"
+}

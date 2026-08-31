@@ -6,6 +6,7 @@
   "appNav": {
     "dashboard": "Dashboard",
     "settings": "Settings",
+    "gallery": "Component gallery",
     "collapse": "Collapse menu",
     "expand": "Expand menu",
     "logout": "Sign out",

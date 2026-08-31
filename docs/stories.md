@@ -298,7 +298,7 @@ Aucune (corrige du code déjà mergé sur `main`).
 - [ ] `npm run dev:demo` et `npm run start:demo` démarrent l'app **sans aucune variable Supabase/Stripe** définie — zéro crash, zéro écran d'erreur.
 - [ ] Un bandeau « mode démo » persistant signale que les données sont fictives.
 - [ ] Tous les écrans livrés (landing, pricing, login/signup, dashboard, settings, admin, pages légales) rendent des données fictives cohérentes (utilisateur, abonnement, rôle).
-- [ ] Les parcours sont **interactifs en mémoire** : connexion (n'importe quel email), déconnexion, bascule de rôle `user`↔`admin`, souscription simulée qui débloque le contenu gated, bascule fr/en. L'état se réinitialise au redémarrage du serveur.
+- [ ] Les parcours sont **interactifs** : connexion (n'importe quel email), déconnexion, bascule de rôle `user`↔`admin`, souscription simulée qui débloque le contenu gated, bascule fr/en. L'état de session vit dans un cookie par navigateur (pas en mémoire par process) ; un contrôle explicite de réinitialisation dans le bandeau restaure les fixtures de départ.
 - [ ] Hors mode démo, le comportement est **strictement inchangé** : aucun chemin de code démo atteignable quand le flag est absent, et l'absence de config réelle échoue comme avant.
 - [ ] `npm run test`, `lint:design`, `typecheck`, `build` passent.
 

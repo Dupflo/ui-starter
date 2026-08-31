@@ -7,15 +7,18 @@
   },
   "scripts": {
     "dev": "next dev --port 8000",
+    "dev:demo": "DEMO_MODE=1 next dev --port 8000",
     "prebuild": "node scripts/check-design-tokens.mjs",
     "build": "next build",
     "start": "next start",
+    "start:demo": "DEMO_MODE=1 next build && next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:design": "node scripts/check-design-tokens.mjs",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
+    "test:build": "VITEST_INCLUDE_BUILD=1 vitest run next.config.demo-flag.test.ts",
     "prepare": "husky",
     "init": "node scripts/init.mjs"
   },

@@ -46,12 +46,24 @@ vi.mock("@/lib/stripe/config", () => ({
     id === "pro" ? { id: "pro", priceId: "price_test_pro_123" } : undefined,
 }))
 
+// s11-demo-mode T4 — demo swap mocks.
+const isDemoModeMock = vi.fn()
+vi.mock("@/lib/demo/flag", () => ({ isDemoMode: () => isDemoModeMock() }))
+
+const setDemoSubscriptionActiveMock = vi.fn()
+vi.mock("@/lib/demo/state", () => ({
+  setDemoSubscriptionActive: (active: boolean) =>
+    setDemoSubscriptionActiveMock(active),
+}))
+
 import { createCheckoutSession } from "./checkout"
 
 describe("createCheckoutSession — result-object, jamais de throw", () => {
   beforeEach(() => {
     getUser.mockReset()
     sessionsCreate.mockReset()
+    isDemoModeMock.mockReset()
+    isDemoModeMock.mockReturnValue(false)
   })
 
   it("retourne { ok:false, error:'unauthenticated' } sans session", async () => {
@@ -97,5 +109,39 @@ describe("createCheckoutSession — result-object, jamais de throw", () => {
     await expect(
       createCheckoutSession("price_test_pro_123"),
     ).resolves.toBeDefined()
+  })
+})
+
+// ─── s11-demo-mode T4 — demo swap, les deux branches ──────────────────────────
+
+describe("createCheckoutSession — demo swap (T4)", () => {
+  beforeEach(() => {
+    getUser.mockReset()
+    sessionsCreate.mockReset()
+    isDemoModeMock.mockReset()
+    setDemoSubscriptionActiveMock.mockReset()
+  })
+
+  it("simule la souscription (jamais Stripe) et retourne { ok:true, url } quand le flag est actif", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    getUser.mockResolvedValue({ id: "demo-1" })
+    const result = await createCheckoutSession("price_test_pro_123")
+    expect(result).toEqual({ ok: true, url: "/dashboard" })
+    expect(sessionsCreate).not.toHaveBeenCalled()
+    expect(setDemoSubscriptionActiveMock).toHaveBeenCalledWith(true)
+  })
+
+  it("retombe sur le chemin réel (Stripe) quand le flag est absent", async () => {
+    isDemoModeMock.mockReturnValue(false)
+    getUser.mockResolvedValue({ id: "user-1" })
+    sessionsCreate.mockResolvedValue({
+      url: "https://checkout.stripe.com/pay/cs_test",
+    })
+    const result = await createCheckoutSession("price_test_pro_123")
+    expect(result).toEqual({
+      ok: true,
+      url: "https://checkout.stripe.com/pay/cs_test",
+    })
+    expect(setDemoSubscriptionActiveMock).not.toHaveBeenCalled()
   })
 })

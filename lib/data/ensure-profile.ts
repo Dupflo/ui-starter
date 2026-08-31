@@ -1,5 +1,6 @@
 import "server-only"
 import { createServiceRoleClient } from "@/lib/supabase/service-role"
+import { isDemoMode } from "@/lib/demo/flag"
 
 /**
  * Garantit qu'une ligne `profiles` existe pour cet utilisateur.
@@ -15,6 +16,11 @@ export async function ensureProfile(
   userId: string,
   meta: { fullName?: string | null } = {},
 ): Promise<void> {
+  // s11-demo-mode (T4) : le profil démo existe déjà en mémoire
+  // (lib/demo/state.ts) — pas de provisioning à faire, et surtout pas
+  // d'appel au client service-role (le guard `server-only` reste entier).
+  if (isDemoMode()) return
+
   const displayName = (meta.fullName ?? "").trim() || null
 
   const supabase = createServiceRoleClient()

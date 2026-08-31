@@ -13,6 +13,15 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({ from }),
 }))
 
+// s11-demo-mode T4 — demo swap mocks.
+const isDemoModeMock = vi.fn()
+vi.mock("@/lib/demo/flag", () => ({ isDemoMode: () => isDemoModeMock() }))
+
+const getDemoSubscriptionStatusMock = vi.fn()
+vi.mock("@/lib/demo/state", () => ({
+  getDemoSubscriptionStatus: () => getDemoSubscriptionStatusMock(),
+}))
+
 import { getSubscription, isActiveSubscriber } from "./subscription"
 
 describe("isActiveSubscriber — prédicat pur", () => {
@@ -47,6 +56,8 @@ describe("getSubscription", () => {
     select.mockClear()
     eq.mockClear()
     maybeSingle.mockClear()
+    isDemoModeMock.mockReset()
+    isDemoModeMock.mockReturnValue(false)
   })
 
   it("retourne { status, plan } si la ligne existe", async () => {
@@ -65,5 +76,33 @@ describe("getSubscription", () => {
     maybeSingle.mockResolvedValue({ data: null, error: null })
     const result = await getSubscription("user-2")
     expect(result).toBeNull()
+  })
+})
+
+// ─── s11-demo-mode T4 — demo swap, les deux branches ──────────────────────────
+
+describe("getSubscription — demo swap (T4)", () => {
+  beforeEach(() => {
+    from.mockClear()
+    isDemoModeMock.mockReset()
+    getDemoSubscriptionStatusMock.mockReset()
+  })
+
+  it("retourne le statut démo sans toucher Supabase quand le flag est actif", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    getDemoSubscriptionStatusMock.mockReturnValue("active")
+    const result = await getSubscription("ignored")
+    expect(result).toEqual({ status: "active", plan: "pro" })
+    expect(from).not.toHaveBeenCalled()
+  })
+
+  it("retombe sur le chemin réel quand le flag est absent", async () => {
+    isDemoModeMock.mockReturnValue(false)
+    maybeSingle.mockResolvedValue({
+      data: { status: "canceled", plan: "pro" },
+    })
+    const result = await getSubscription("u1")
+    expect(result).toEqual({ status: "canceled", plan: "pro" })
+    expect(getDemoSubscriptionStatusMock).not.toHaveBeenCalled()
   })
 })

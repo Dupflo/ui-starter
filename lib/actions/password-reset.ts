@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { isDemoMode } from "@/lib/demo/flag"
 
 /**
  * « Mot de passe oublié ». Le lien de réinitialisation est émis et envoyé par
@@ -18,6 +19,10 @@ export async function requestPasswordReset(
   const clean = email.trim().toLowerCase()
   const base = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "")
   if (!clean) return { ok: true }
+
+  // s11-demo-mode (T4) : rien à envoyer, jamais Supabase — la réponse reste
+  // { ok:true } quoi qu'il arrive (contrat anti-énumération inchangé).
+  if (isDemoMode()) return { ok: true }
 
   try {
     const supabase = await createClient()

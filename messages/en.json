@@ -129,6 +129,19 @@
     "title": "Administration",
     "subtitle": "Admin-only area. Add your administration tools here."
   },
+  "demo": {
+    "badge": "Demo mode",
+    "notice": "Fake data — nothing is saved server-side; use \"Reset\" to start over.",
+    "emailLabel": "Log in as (any e-mail works)",
+    "connect": "Log in",
+    "logout": "Log out",
+    "roleLabel": "Role",
+    "roleUser": "User",
+    "roleAdmin": "Admin",
+    "subscribe": "Simulate subscription",
+    "unsubscribe": "Cancel simulated subscription",
+    "reset": "Reset"
+  },
   "pricing": {
     "title": "Simple, transparent pricing",
     "subtitle": "One plan, everything you need. Cancel anytime.",

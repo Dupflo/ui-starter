@@ -40,17 +40,67 @@ vi.mock("@/i18n/routing", () => ({
   },
 }))
 
-import proxy from "./proxy"
+// s11-demo-mode T5 — demo identity short-circuit mocks. isDemoMode() defaults
+// to false so the pre-existing AC3/AC4 suite below exercises the exact same
+// real path it always did.
+const isDemoModeMock = vi.fn()
+vi.mock("@/lib/demo/flag", () => ({ isDemoMode: () => isDemoModeMock() }))
 
-// Helper: build a minimal NextRequest for a given absolute path.
-function makeRequest(path: string) {
-  return new NextRequest(new URL(path, "http://localhost:3000"))
+// Fix (s11-demo-mode review, critical) — the demo section below no longer
+// mocks `@/lib/demo/state` or `@/lib/demo/session-cookie`: mocking the
+// state module is exactly what collapsed proxy.ts's and the server
+// actions' module graphs into one and made the wiring bug invisible (see
+// docs/reviews/s11-demo-mode.md). `next/headers` IS mocked, because
+// `cookies()` throws outside a real Next request scope — that is a
+// framework-glue mock, not a mock of anything this file proves, and it is
+// only exercised by the crossing describe block below (proxy.ts itself
+// never imports `next/headers`).
+let jar: Map<string, string> = new Map()
+// Fix (s11-demo-mode review, major) — the previous fake `set(name, value)`
+// silently dropped the cookie options argument, so a regression on
+// `httpOnly`/`sameSite`/`path` in COOKIE_OPTIONS could never fail here.
+// Captured below so a test can assert on it.
+let lastSetOptions: Record<string, unknown> | undefined
+vi.mock("next/headers", () => ({
+  cookies: async () => ({
+    get: (name: string) => {
+      const value = jar.get(name)
+      return value === undefined ? undefined : { name, value }
+    },
+    set: (name: string, value: string, options?: Record<string, unknown>) => {
+      jar.set(name, value)
+      lastSetOptions = options
+    },
+  }),
+}))
+
+import proxy from "./proxy"
+import {
+  DEMO_SESSION_COOKIE,
+  defaultDemoSession,
+  serializeDemoSession,
+} from "@/lib/demo/session-cookie"
+
+// Helper: build a minimal NextRequest for a given absolute path, optionally
+// carrying a real `demo_session` cookie value (URL-encoded, exactly like a
+// browser would send it back).
+function makeRequest(path: string, demoSessionCookieValue?: string) {
+  const url = new URL(path, "http://localhost:3000")
+  const init: { headers?: HeadersInit } = {}
+  if (demoSessionCookieValue !== undefined) {
+    init.headers = {
+      cookie: `${DEMO_SESSION_COOKIE}=${encodeURIComponent(demoSessionCookieValue)}`,
+    }
+  }
+  return new NextRequest(url, init)
 }
 
 // AC3 + AC4 proxy decision cases.
 describe("proxy — protection-decision (AC3 + AC4)", () => {
   beforeEach(() => {
     getUser.mockReset()
+    isDemoModeMock.mockReset()
+    isDemoModeMock.mockReturnValue(false)
   })
 
   // AC3: unauth on a PROTECTED path → redirect to /login?redirect=<encoded path>
@@ -119,6 +169,137 @@ describe("proxy — protection-decision (AC3 + AC4)", () => {
     getUser.mockResolvedValue({ data: { user: null }, error: null })
     const req = makeRequest("/fr")
     const res = await proxy(req)
+    expect(res.status).not.toBe(307)
+  })
+})
+
+// ─── s11-demo-mode T5 — demo identity short-circuit ────────────────────────────
+//
+// proxy.ts is the sharpest edge: it runs on every request and the real path
+// must NEVER have anything inserted between `createServerClient` and
+// `getUser()` (AGENTS.md rule). The demo branch must return BEFORE that
+// block, not inside it — proven here by asserting the real Supabase
+// `getUser` mock is never called when demo mode is active.
+//
+// Fix (s11-demo-mode review, critical): these tests drive proxy.ts with a
+// REAL `demo_session` cookie value, parsed by the REAL, unmocked
+// `lib/demo/session-cookie.ts` codec — exactly what a browser presents back
+// on the next request. Nothing about "is there a demo user" is mocked here.
+
+describe("proxy — demo identity via the real session cookie (T5, fixed)", () => {
+  beforeEach(() => {
+    getUser.mockReset()
+    isDemoModeMock.mockReset()
+  })
+
+  it("demo ON, no cookie yet (fresh visit): default signed-in fixture passes through WITHOUT ever calling the real Supabase client", async () => {
+    isDemoModeMock.mockReturnValue(true)
+
+    const res = await proxy(makeRequest("/fr/dashboard"))
+
+    expect(getUser).not.toHaveBeenCalled()
+    expect(res.status).not.toBe(307)
+    expect(res.status).not.toBe(308)
+  })
+
+  it("demo ON, cookie carries a signed-out session: protected route redirects to /login WITHOUT calling the real Supabase client", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    const signedOut = serializeDemoSession({
+      ...defaultDemoSession(),
+      email: null,
+    })
+
+    const res = await proxy(makeRequest("/fr/dashboard", signedOut))
+
+    expect(getUser).not.toHaveBeenCalled()
+    expect(res.status).toBe(307)
+    const location = res.headers.get("location") ?? ""
+    expect(location).toMatch(/\/fr\/login/)
+    // The discriminator that matters: proxy.ts ALWAYS appends ?redirect= —
+    // a page-level redirect() never does. This is what distinguishes "the
+    // middleware made this decision" from "the page did".
+    expect(location).toContain("redirect=")
+  })
+
+  it("demo ON, cookie carries a signed-in session: passes through WITHOUT calling the real Supabase client", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    const signedIn = serializeDemoSession(defaultDemoSession())
+
+    const res = await proxy(makeRequest("/fr/dashboard", signedIn))
+
+    expect(getUser).not.toHaveBeenCalled()
+    expect(res.status).not.toBe(307)
+  })
+
+  it("demo OFF: falls through to the real Supabase client, unchanged, even if a demo cookie is present", async () => {
+    isDemoModeMock.mockReturnValue(false)
+    getUser.mockResolvedValue({ data: { user: null }, error: null })
+    const signedIn = serializeDemoSession(defaultDemoSession())
+
+    const res = await proxy(makeRequest("/fr/dashboard", signedIn))
+
+    expect(getUser).toHaveBeenCalledOnce()
+    expect(res.headers.get("location")).toMatch(/\/fr\/login/)
+  })
+})
+
+// ─── the critical fix: a server action's sign-out is now visible to proxy ──
+//
+// This is the exact scenario the review reproduced by hand (A–E): sign out
+// via the banner, then hit a protected route. It uses the REAL, unmocked
+// `lib/demo/state.ts` (the module the server actions call) so the write
+// side and the read side (proxy.ts) are both real code — only
+// `next/headers`'s `cookies()` is a fake jar, standing in for "the browser
+// carries this cookie on the next request".
+
+describe("proxy — demo sign-out (real lib/demo/state.ts) now crosses into the middleware", () => {
+  beforeEach(async () => {
+    jar = new Map()
+    lastSetOptions = undefined
+    getUser.mockReset()
+    isDemoModeMock.mockReturnValue(true)
+  })
+
+  it("writes the session cookie with path=/, sameSite=lax, httpOnly=true (real action-side module)", async () => {
+    const { demoSignIn } = await import("@/lib/demo/state")
+    await demoSignIn("zoe@test.io")
+    expect(lastSetOptions).toEqual({
+      path: "/",
+      sameSite: "lax",
+      httpOnly: true,
+    })
+  })
+
+  it("A→E: fresh visit passes, sign-out via the real action-side module makes the middleware redirect, sign-in makes it pass again", async () => {
+    const { demoSignIn, demoSignOut } = await import("@/lib/demo/state")
+
+    function requestFromJar(path: string) {
+      return makeRequest(path, jar.get(DEMO_SESSION_COOKIE))
+    }
+
+    // A) fresh /dashboard (no cookie written yet) → passes.
+    let res = await proxy(requestFromJar("/fr/dashboard"))
+    expect(res.status).not.toBe(307)
+
+    // sign in as an arbitrary email through the REAL action-side module —
+    // exactly what demoLoginAction() does.
+    await demoSignIn("zoe@test.io")
+    res = await proxy(requestFromJar("/fr/dashboard"))
+    expect(res.status).not.toBe(307)
+
+    // B/C) sign OUT through the REAL action-side module — exactly what
+    // signOutAction() does.
+    await demoSignOut()
+    res = await proxy(requestFromJar("/fr/dashboard"))
+    expect(res.status).toBe(307)
+    const location = res.headers.get("location") ?? ""
+    expect(location).toMatch(/\/fr\/login/)
+    expect(location).toContain("redirect=")
+    expect(getUser).not.toHaveBeenCalled()
+
+    // D) sign back in — the middleware must see it on the very next request.
+    await demoSignIn("visitor@example.com")
+    res = await proxy(requestFromJar("/fr/dashboard"))
     expect(res.status).not.toBe(307)
   })
 })

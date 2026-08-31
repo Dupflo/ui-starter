@@ -1,6 +1,8 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { isDemoMode } from "@/lib/demo/flag"
+import { demoSignOut } from "@/lib/demo/state"
 
 /**
  * Déconnexion côté SERVEUR — c'est elle qui fait autorité.
@@ -16,6 +18,12 @@ import { createClient } from "@/lib/supabase/server"
  * sur la machine devant laquelle il est en train de partir.
  */
 export async function signOutAction(): Promise<void> {
+  // s11-demo-mode (T4) : efface l'état démo, jamais Supabase.
+  if (isDemoMode()) {
+    await demoSignOut()
+    return
+  }
+
   const supabase = await createClient()
   try {
     await supabase.auth.signOut({ scope: "local" })

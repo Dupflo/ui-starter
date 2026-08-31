@@ -1,5 +1,8 @@
 import "server-only"
 import { createClient } from "@/lib/supabase/server"
+import { isDemoMode } from "@/lib/demo/flag"
+import { getDemoRole, getDemoDisplayName } from "@/lib/demo/state"
+import { DEMO_PROFILE } from "@/lib/demo/fixtures"
 
 /**
  * Nom affiché dans le chrome de l'app (badge de la barre latérale).
@@ -13,6 +16,8 @@ export async function getDisplayName(
   userId: string,
   meta: { fullName?: string | null; email?: string | null },
 ): Promise<string | null> {
+  if (isDemoMode()) return getDemoDisplayName()
+
   const supabase = await createClient()
   const { data } = await supabase
     .from("profiles")
@@ -36,6 +41,8 @@ export async function getDisplayName(
  * initiales.
  */
 export async function getAvatarUrl(userId: string): Promise<string | null> {
+  if (isDemoMode()) return DEMO_PROFILE.avatar_url ?? null
+
   const supabase = await createClient()
   const { data } = await supabase
     .from("profiles")
@@ -53,6 +60,8 @@ export async function getAvatarUrl(userId: string): Promise<string | null> {
  * `getUser()` côté serveur ; le gate de route est dans la page, pas ici.
  */
 export async function getRole(userId: string): Promise<"user" | "admin"> {
+  if (isDemoMode()) return getDemoRole()
+
   const supabase = await createClient()
   const { data } = await supabase
     .from("profiles")

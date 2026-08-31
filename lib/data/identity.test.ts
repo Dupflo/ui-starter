@@ -11,7 +11,28 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({ from }),
 }))
 
-import { initialsOf, getDisplayName, getRole, isAdmin } from "./identity"
+// s11-demo-mode T4 — demo swap mocks.
+const isDemoModeMock = vi.fn()
+vi.mock("@/lib/demo/flag", () => ({ isDemoMode: () => isDemoModeMock() }))
+
+const getDemoRoleMock = vi.fn()
+const getDemoDisplayNameMock = vi.fn()
+vi.mock("@/lib/demo/state", () => ({
+  getDemoRole: () => getDemoRoleMock(),
+  getDemoDisplayName: () => getDemoDisplayNameMock(),
+}))
+
+vi.mock("@/lib/demo/fixtures", () => ({
+  DEMO_PROFILE: { avatar_url: null },
+}))
+
+import {
+  initialsOf,
+  getDisplayName,
+  getAvatarUrl,
+  getRole,
+  isAdmin,
+} from "./identity"
 
 // ─── initialsOf — pure function, aucun mock nécessaire ───────────────────────
 
@@ -126,5 +147,71 @@ describe("getDisplayName — fallback chain", () => {
       email: null,
     })
     expect(result).toBeNull()
+  })
+})
+
+// ─── s11-demo-mode T4 — demo swap, les deux branches ──────────────────────────
+
+describe("getDisplayName / getRole / getAvatarUrl — demo swap (T4)", () => {
+  beforeEach(() => {
+    maybeSingle.mockReset()
+    from.mockClear()
+    isDemoModeMock.mockReset()
+    getDemoRoleMock.mockReset()
+    getDemoDisplayNameMock.mockReset()
+  })
+
+  it("getDisplayName retourne l'état démo et ne touche jamais Supabase quand le flag est actif", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    getDemoDisplayNameMock.mockReturnValue("Alex Démo")
+    const result = await getDisplayName("ignored", {
+      fullName: "ignored",
+      email: "ignored@example.com",
+    })
+    expect(result).toBe("Alex Démo")
+    expect(from).not.toHaveBeenCalled()
+  })
+
+  it("getDisplayName retombe sur le chemin réel quand le flag est absent", async () => {
+    isDemoModeMock.mockReturnValue(false)
+    maybeSingle.mockResolvedValue({ data: { display_name: "Ada Lovelace" } })
+    const result = await getDisplayName("u1", {
+      fullName: null,
+      email: null,
+    })
+    expect(result).toBe("Ada Lovelace")
+    expect(getDemoDisplayNameMock).not.toHaveBeenCalled()
+  })
+
+  it("getRole retourne le rôle démo et ne touche jamais Supabase quand le flag est actif", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    getDemoRoleMock.mockReturnValue("admin")
+    const result = await getRole("ignored")
+    expect(result).toBe("admin")
+    expect(from).not.toHaveBeenCalled()
+  })
+
+  it("getRole retombe sur le chemin réel quand le flag est absent", async () => {
+    isDemoModeMock.mockReturnValue(false)
+    maybeSingle.mockResolvedValue({ data: { role: "user" } })
+    const result = await getRole("u1")
+    expect(result).toBe("user")
+    expect(getDemoRoleMock).not.toHaveBeenCalled()
+  })
+
+  it("getAvatarUrl retourne l'avatar démo (null) sans toucher Supabase quand le flag est actif", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    const result = await getAvatarUrl("ignored")
+    expect(result).toBeNull()
+    expect(from).not.toHaveBeenCalled()
+  })
+
+  it("getAvatarUrl retombe sur le chemin réel quand le flag est absent", async () => {
+    isDemoModeMock.mockReturnValue(false)
+    maybeSingle.mockResolvedValue({
+      data: { avatar_url: "https://example.com/a.png" },
+    })
+    const result = await getAvatarUrl("u1")
+    expect(result).toBe("https://example.com/a.png")
   })
 })

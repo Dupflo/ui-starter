@@ -3,6 +3,8 @@
 import { createClient, getUser } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service-role"
 import { reportError } from "@/lib/observability"
+import { isDemoMode } from "@/lib/demo/flag"
+import { setDemoDisplayName, demoSignOut } from "@/lib/demo/state"
 
 /**
  * Actions de la page Réglages.
@@ -19,6 +21,13 @@ export async function updateSettingsProfile(input: {
 }): Promise<ProfileResult> {
   const user = await getUser()
   if (!user) return { ok: false, error: "unauthenticated" }
+
+  // s11-demo-mode (T4) : édite l'état en mémoire, jamais Supabase.
+  if (isDemoMode()) {
+    await setDemoDisplayName(input.fullName.trim())
+    return { ok: true }
+  }
+
   try {
     const supabase = await createClient()
     const displayName = input.fullName.trim()
@@ -61,6 +70,11 @@ export async function changePassword(input: {
   const user = await getUser()
   if (!user?.email) return { ok: false, reason: "failed" }
 
+  // s11-demo-mode (T4) : le compte démo n'a pas de mot de passe réel à
+  // changer — même message/branche qu'un compte Google-only (trap: refuser
+  // avec un message honnête plutôt que prétendre réussir contre rien).
+  if (isDemoMode()) return { ok: false, reason: "no_password_account" }
+
   // Compte créé via Google seul : aucun mot de passe à remplacer.
   const hasPassword = (user.identities ?? []).some(
     (i) => i.provider === "email",
@@ -101,6 +115,14 @@ export async function deleteAccount(input: {
   if (!user?.email) return { ok: false, reason: "failed" }
   if (input.confirmEmail.trim().toLowerCase() !== user.email.toLowerCase()) {
     return { ok: false, reason: "email_mismatch" }
+  }
+
+  // s11-demo-mode (T4) : rien à supprimer réellement — l'effacement se
+  // matérialise en déconnectant l'utilisateur démo (trap: mutation visible
+  // plutôt qu'un succès simulé contre rien).
+  if (isDemoMode()) {
+    await demoSignOut()
+    return { ok: true }
   }
 
   const service = createServiceRoleClient()

@@ -17,7 +17,7 @@
  *
  * NAMESPACES COVERED HERE
  * - metadata, appNav, cookieBanner, dashboard, forgot, newPassword,
- *   localeSwitcher, settings, home, pricing, admin
+ *   localeSwitcher, settings, home, pricing, admin, demo
  * (auth and legal are covered by their own test files)
  *
  * AC3 NOTE (persistence — no code, no test)
@@ -166,6 +166,22 @@ const PRICING_KEYS = [
 // app/[locale]/(app)/admin/page.tsx
 const ADMIN_KEYS = ["title", "subtitle"] as const
 
+// ─── demo ────────────────────────────────────────────────────────────────────
+// components/demo/demo-banner.tsx, demo-banner-controls.tsx (s11-demo-mode T6)
+const DEMO_KEYS = [
+  "badge",
+  "notice",
+  "emailLabel",
+  "connect",
+  "logout",
+  "roleLabel",
+  "roleUser",
+  "roleAdmin",
+  "subscribe",
+  "unsubscribe",
+  "reset",
+] as const
+
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
 const NAMESPACE_FIXTURES: Array<{
@@ -183,6 +199,7 @@ const NAMESPACE_FIXTURES: Array<{
   { ns: "home", keys: HOME_KEYS },
   { ns: "pricing", keys: PRICING_KEYS },
   { ns: "admin", keys: ADMIN_KEYS },
+  { ns: "demo", keys: DEMO_KEYS },
 ]
 
 for (const { ns, keys } of NAMESPACE_FIXTURES) {

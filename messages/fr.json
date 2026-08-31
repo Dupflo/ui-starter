@@ -129,6 +129,19 @@
     "title": "Administration",
     "subtitle": "Zone réservée aux administrateurs. Ajoutez ici vos outils d'administration."
   },
+  "demo": {
+    "badge": "Mode démo",
+    "notice": "Données fictives — rien n'est enregistré côté serveur ; utilisez « Réinitialiser » pour repartir de zéro.",
+    "emailLabel": "Se connecter en tant que (n'importe quel e-mail)",
+    "connect": "Se connecter",
+    "logout": "Se déconnecter",
+    "roleLabel": "Rôle",
+    "roleUser": "Utilisateur",
+    "roleAdmin": "Administrateur",
+    "subscribe": "Simuler l'abonnement",
+    "unsubscribe": "Annuler l'abonnement simulé",
+    "reset": "Réinitialiser"
+  },
   "pricing": {
     "title": "Tarification simple et transparente",
     "subtitle": "Un seul plan, tout ce dont vous avez besoin. Résiliable à tout moment.",

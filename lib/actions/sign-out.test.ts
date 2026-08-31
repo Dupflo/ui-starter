@@ -8,6 +8,13 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({ auth: { signOut } }),
 }))
 
+// s11-demo-mode T4 — demo swap mocks.
+const isDemoModeMock = vi.fn()
+vi.mock("@/lib/demo/flag", () => ({ isDemoMode: () => isDemoModeMock() }))
+
+const demoSignOutMock = vi.fn()
+vi.mock("@/lib/demo/state", () => ({ demoSignOut: () => demoSignOutMock() }))
+
 import { signOutAction } from "./sign-out"
 
 // AC3 — "Logout clears the session" (côté serveur, ce qui fait autorité).
@@ -18,6 +25,8 @@ import { signOutAction } from "./sign-out"
 describe("signOutAction — AC3 session-clear contract", () => {
   beforeEach(() => {
     signOut.mockReset()
+    isDemoModeMock.mockReset()
+    isDemoModeMock.mockReturnValue(false)
   })
 
   it("appelle signOut avec { scope: 'local' }", async () => {
@@ -31,5 +40,22 @@ describe("signOutAction — AC3 session-clear contract", () => {
     signOut.mockRejectedValue(new Error("network failure"))
     // L'action ne doit pas propager l'exception : elle se résout void.
     await expect(signOutAction()).resolves.toBeUndefined()
+  })
+})
+
+// ─── s11-demo-mode T4 — demo swap, les deux branches ──────────────────────────
+
+describe("signOutAction — demo swap (T4)", () => {
+  beforeEach(() => {
+    signOut.mockReset()
+    isDemoModeMock.mockReset()
+    demoSignOutMock.mockReset()
+  })
+
+  it("efface l'état démo sans jamais appeler le client Supabase quand le flag est actif", async () => {
+    isDemoModeMock.mockReturnValue(true)
+    await signOutAction()
+    expect(demoSignOutMock).toHaveBeenCalledOnce()
+    expect(signOut).not.toHaveBeenCalled()
   })
 })

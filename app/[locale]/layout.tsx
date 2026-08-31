@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing"
 import { CookieBanner } from "@/components/cookie-banner"
 import { Analytics } from "@/components/analytics"
 import { ClientErrorReporter } from "@/components/observability/client-error-reporter"
+import { DemoBanner } from "@/components/demo/demo-banner"
 import { plusJakartaSans, geist, geistMono } from "@/app/fonts"
 import "../globals.css"
 
@@ -47,6 +48,9 @@ export default async function LocaleLayout({
     >
       <body>
         <NextIntlClientProvider>
+          {/* s11-demo-mode T6 — unconditional when demo mode is active (a
+              no-op <null> otherwise); never in the auth/business components. */}
+          <DemoBanner />
           {children}
           <CookieBanner />
           <Analytics />

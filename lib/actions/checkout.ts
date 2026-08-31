@@ -4,6 +4,8 @@ import { getUser } from "@/lib/supabase/server"
 import { getStripe } from "@/lib/stripe/client"
 import { getPlanByPriceId } from "@/lib/stripe/config"
 import { reportError } from "@/lib/observability"
+import { isDemoMode } from "@/lib/demo/flag"
+import { setDemoSubscriptionActive } from "@/lib/demo/state"
 
 export type CheckoutResult =
   | { ok: true; url: string }
@@ -25,6 +27,13 @@ export async function createCheckoutSession(
   // Validate priceId against known plans (reject arbitrary client-supplied values).
   const plan = getPlanByPriceId(priceId)
   if (!plan) return { ok: false, error: "invalid_price" }
+
+  // s11-demo-mode (T4) : simule la souscription (jamais Stripe) — AC
+  // "souscription simulée qui débloque le contenu gated".
+  if (isDemoMode()) {
+    await setDemoSubscriptionActive(true)
+    return { ok: true, url: "/dashboard" }
+  }
 
   try {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? ""

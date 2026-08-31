@@ -10,22 +10,17 @@ import {
 } from "@/components/gallery/theme-toggle"
 import { PrimitivesSection } from "@/components/gallery/primitives-section"
 import { BlocksSection } from "@/components/gallery/blocks-section"
-import { isDemoMode } from "@/lib/demo/flag"
+import { isGalleryVisible } from "@/lib/demo/flag"
 
-/**
- * T6 (s12-ui-gallery) — visible in development and in demo mode only; a
- * normal production build 404s it (human decision, docs/plans/s12-ui-gallery.md
- * "Decisions taken": every SaaS forked from this starter would otherwise ship
- * its own component gallery to real users).
- *
- * `isDemoMode()` (lib/demo/flag.ts) stays the single reader of `DEMO_MODE` —
- * guarded by lib/demo/flag.test.ts. `process.env.NODE_ENV` is a distinct,
- * Next-inlined constant (not `DEMO_MODE`), so checking it here does not add a
- * second reader. This is the one and only place this gate is evaluated.
- */
-function isGalleryVisible(): boolean {
-  return isDemoMode() || process.env.NODE_ENV === "development"
-}
+// T6 (s12-ui-gallery) — visible in development and in demo mode only; a
+// normal production build 404s it (human decision, docs/plans/s12-ui-gallery.md
+// "Decisions taken": every SaaS forked from this starter would otherwise ship
+// its own component gallery to real users).
+//
+// `isGalleryVisible()` (lib/demo/flag.ts) is the single implementation of
+// this predicate — the sidebar nav link (components/app/app-sidebar.tsx)
+// calls the same function, so the two cannot drift (follow-up to
+// s12-ui-gallery, pinned by lib/demo/gallery-visibility.test.ts).
 
 export default async function UiGalleryPage({
   params,

@@ -6,6 +6,7 @@
   "appNav": {
     "dashboard": "Tableau de bord",
     "settings": "Réglages",
+    "gallery": "Galerie de composants",
     "collapse": "Réduire le menu",
     "expand": "Déplier le menu",
     "logout": "Se déconnecter",

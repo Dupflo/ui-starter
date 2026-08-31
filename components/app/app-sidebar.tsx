@@ -6,6 +6,7 @@ import { Logo } from "@/components/brand/logo"
 import { useAppUser } from "@/components/app/app-shell"
 import { Link, usePathname } from "@/i18n/navigation"
 import { useLogout } from "@/lib/hooks/use-logout"
+import { isGalleryVisible } from "@/lib/demo/flag"
 import { cn } from "@/lib/cn"
 
 // 16×16 line icons ported from the maquette (stroke = currentColor).
@@ -24,11 +25,24 @@ const ICONS: Record<string, ReactNode> = {
       <circle cx="8" cy="8" r="6" />
     </>
   ),
+  gallery: (
+    <>
+      <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" />
+      <circle cx="5.2" cy="5.5" r="1.3" />
+      <path d="m2.2 11.5 3.4-3.4a1 1 0 0 1 1.4 0l1.6 1.6" />
+      <path d="m8.8 13 3.3-3.3a1 1 0 0 1 1.4 0l1 1" />
+    </>
+  ),
 }
 
+// The gallery link (/ui) is only in the nav when the route itself is
+// reachable — `isGalleryVisible()` (lib/demo/flag.ts) is the exact same
+// predicate the route gates on, so the two cannot drift (follow-up to
+// s12-ui-gallery, pinned by lib/demo/gallery-visibility.test.ts).
 const ITEMS = [
   { key: "dashboard", href: "/dashboard" },
   { key: "settings", href: "/settings" },
+  ...(isGalleryVisible() ? [{ key: "gallery", href: "/ui" }] : []),
 ] as const
 
 function NavIcon({ name }: { name: string }) {

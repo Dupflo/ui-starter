@@ -1,13 +1,13 @@
 import type { ElementType, ReactNode } from "react"
 import { cn } from "@/lib/cn"
 
-const sizes = {
+export const sizes = {
   xs: "text-xs",
   sm: "text-sm",
   base: "text-base",
 } as const
 
-const tones = {
+export const tones = {
   muted: "text-muted",
   ink: "text-ink",
   strong: "text-ink-strong",

@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/cn"
 
 // One colour per tone (soft bg + readable text). Dot inherits the text colour.
-const tones = {
+export const tones = {
   neutral: "bg-fill-mute text-muted",
   warning: "bg-warning-soft text-warning",
   success: "bg-success-soft text-success",
@@ -12,7 +12,7 @@ const tones = {
   link: "bg-success-soft text-link",
 } as const
 
-const sizes = {
+export const sizes = {
   sm: "px-2.5 py-0.5 text-2xs",
   md: "px-3 py-1.5 text-xs",
 } as const

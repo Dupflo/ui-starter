@@ -1,15 +1,15 @@
 import { cn } from "@/lib/cn"
 
-type CardVariant = "surface" | "pine"
-type CardPad = "sm" | "md" | "lg"
+export type CardVariant = "surface" | "pine"
+export type CardPad = "sm" | "md" | "lg"
 
 // Surface = bordered light card (default). Pine = solid dark card.
-const variants: Record<CardVariant, string> = {
+export const variants: Record<CardVariant, string> = {
   surface: "border border-line bg-paper",
   pine: "light-scope bg-pine text-paper",
 }
 
-const pads: Record<CardPad, string> = {
+export const pads: Record<CardPad, string> = {
   sm: "p-5",
   md: "p-6",
   lg: "p-8",

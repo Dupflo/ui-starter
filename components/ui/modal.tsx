@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn"
 const EXIT_MS = 300
 
 // Width applies from sm up; on mobile the dialog is a full-width bottom sheet.
-const sizes = {
+export const sizes = {
   sm: "sm:max-w-sm",
   md: "sm:max-w-md",
   lg: "sm:max-w-lg",

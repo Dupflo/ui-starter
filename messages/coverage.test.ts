@@ -182,6 +182,57 @@ const DEMO_KEYS = [
   "reset",
 ] as const
 
+// ─── gallery ─────────────────────────────────────────────────────────────────
+// app/[locale]/ui/page.tsx, components/gallery/* (s12-ui-gallery T7)
+const GALLERY_KEYS = [
+  "title",
+  "subtitle",
+  "primitivesTitle",
+  "blocksTitle",
+  "copy",
+  "copied",
+  "disabledLabel",
+  "errorExample",
+  "fieldLabelExample",
+  "containerPreview",
+  "selectLabel",
+  "selectOptionALabel",
+  "selectOptionBLabel",
+  "statLabelExample",
+  "modalTrigger",
+  "modalTitle",
+  "modalBody",
+  "lightboxTrigger",
+  "lightboxCaption",
+  "lightboxClose",
+  "lightboxPrev",
+  "lightboxNext",
+  "localeCaption",
+  "blockPageHeaderName",
+  "blockPageHeaderTitle",
+  "blockPageHeaderSubtitle",
+  "blockPageHeaderCta",
+  "blockPricingName",
+  "blockPricingKicker",
+  "blockPricingBadge",
+  "blockPricingTitle",
+  "blockPricingPrice",
+  "blockPricingCta",
+  "blockFormName",
+  "blockFormTitle",
+  "blockFormEmailLabel",
+  "blockFormPasswordLabel",
+  "blockFormCta",
+  "blockEmptyName",
+  "blockEmptyTitle",
+  "blockEmptyBody",
+  "blockEmptyCta",
+  "blockStatRowName",
+  "blockStatLabel1",
+  "blockStatLabel2",
+  "blockStatLabel3",
+] as const
+
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
 const NAMESPACE_FIXTURES: Array<{
@@ -200,6 +251,7 @@ const NAMESPACE_FIXTURES: Array<{
   { ns: "pricing", keys: PRICING_KEYS },
   { ns: "admin", keys: ADMIN_KEYS },
   { ns: "demo", keys: DEMO_KEYS },
+  { ns: "gallery", keys: GALLERY_KEYS },
 ]
 
 for (const { ns, keys } of NAMESPACE_FIXTURES) {

@@ -1,15 +1,21 @@
 import { Link } from "@/i18n/navigation"
 import { cn } from "@/lib/cn"
 
-type Variant = "primary" | "pine" | "outline" | "ghost" | "subtle" | "danger"
-type Size = "sm" | "md" | "lg" | "icon"
+export type Variant =
+  | "primary"
+  | "pine"
+  | "outline"
+  | "ghost"
+  | "subtle"
+  | "danger"
+export type Size = "sm" | "md" | "lg" | "icon"
 
 const base =
   "inline-flex items-center justify-center gap-2 font-ui font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime/60 focus-visible:ring-offset-2 focus-visible:ring-offset-pine disabled:pointer-events-none disabled:opacity-50"
 
 // One complete look per variant (flat enum, no combinatorial props).
 // primary works on any surface; pine/subtle are for the light app chrome.
-const variants: Record<Variant, string> = {
+export const variants: Record<Variant, string> = {
   // Lime = the single strong accent. Dark text on lime, never white.
   primary: "bg-lime text-pine hover:bg-lime/90",
   pine: "light-scope bg-pine font-semibold text-paper hover:bg-pine-900",
@@ -22,7 +28,7 @@ const variants: Record<Variant, string> = {
 }
 
 // Rounded rectangles (not pills) — radius scales with size, matching the maquette.
-const sizes: Record<Size, string> = {
+export const sizes: Record<Size, string> = {
   sm: "h-[38px] rounded-lg px-4 text-xs",
   md: "h-11 rounded-lg px-5 text-sm", // 44px tall → meets min hit-target
   lg: "h-12 rounded-xl px-7 text-base",

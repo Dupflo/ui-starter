@@ -111,6 +111,30 @@ export default async function UiGalleryPage({
                 localeCaption: t("localeCaption"),
                 buttonDarkCaption: t("buttonDarkCaption"),
                 buttonIconLabel: t("buttonIconLabel"),
+                dataTableCaption: t("dataTableCaption"),
+                dataTableColumnName: t("dataTableColumnName"),
+                dataTableColumnEmail: t("dataTableColumnEmail"),
+                dataTableColumnRole: t("dataTableColumnRole"),
+                dataTableLoadingLabel: t("dataTableLoadingLabel"),
+                dataTableEmptyLabel: t("dataTableEmptyLabel"),
+                dataTablePreviousLabel: t("dataTablePreviousLabel"),
+                dataTableNextLabel: t("dataTableNextLabel"),
+                // t.raw(), not t(): the "{page}"/"{total}" placeholders are
+                // interpolated inside DataTable itself (see its doc
+                // comment, same convention as comboboxResultsLabel above).
+                dataTablePageOfTemplate: t.raw("dataTablePageOfTemplate"),
+                dataTableRow1Name: t("dataTableRow1Name"),
+                dataTableRow1Email: t("dataTableRow1Email"),
+                dataTableRow1Role: t("dataTableRow1Role"),
+                dataTableRow2Name: t("dataTableRow2Name"),
+                dataTableRow2Email: t("dataTableRow2Email"),
+                dataTableRow2Role: t("dataTableRow2Role"),
+                dataTableRow3Name: t("dataTableRow3Name"),
+                dataTableRow3Email: t("dataTableRow3Email"),
+                dataTableRow3Role: t("dataTableRow3Role"),
+                dataTableRow4Name: t("dataTableRow4Name"),
+                dataTableRow4Email: t("dataTableRow4Email"),
+                dataTableRow4Role: t("dataTableRow4Role"),
               }}
             />
 
@@ -146,6 +170,35 @@ export default async function UiGalleryPage({
                 statLabel1: t("blockStatLabel1"),
                 statLabel2: t("blockStatLabel2"),
                 statLabel3: t("blockStatLabel3"),
+                usersName: t("blockUsersName"),
+                usersLabels: {
+                  caption: t("usersCaption"),
+                  columnUser: t("usersColumnUser"),
+                  columnRole: t("usersColumnRole"),
+                  columnStatus: t("usersColumnStatus"),
+                  columnActions: t("usersColumnActions"),
+                  actionView: t("usersActionView"),
+                  row1Name: t("usersRow1Name"),
+                  row1Role: t("usersRow1Role"),
+                  row1Status: t("usersRow1Status"),
+                  row2Name: t("usersRow2Name"),
+                  row2Role: t("usersRow2Role"),
+                  row2Status: t("usersRow2Status"),
+                  row3Name: t("usersRow3Name"),
+                  row3Role: t("usersRow3Role"),
+                  row3Status: t("usersRow3Status"),
+                  row4Name: t("usersRow4Name"),
+                  row4Role: t("usersRow4Role"),
+                  row4Status: t("usersRow4Status"),
+                  // Reuses the same generic pagination/loading/empty copy
+                  // as the DataTable primitive demo above (dataTable*) —
+                  // not content specific to this composition.
+                  loadingLabel: t("dataTableLoadingLabel"),
+                  emptyLabel: t("dataTableEmptyLabel"),
+                  previousLabel: t("dataTablePreviousLabel"),
+                  nextLabel: t("dataTableNextLabel"),
+                  pageOfTemplate: t.raw("dataTablePageOfTemplate"),
+                },
               }}
             />
           </div>

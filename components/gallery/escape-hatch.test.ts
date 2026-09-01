@@ -45,7 +45,13 @@ const FILES = [
 // forwarding shape below.
 const RENDER_USAGE_RE = /(?:^|[\s{,])render:\s*\S|render=\{(?!render\})/
 
-const PINNED_TOTAL = 5
+// s17-data-table (T7) — deliberately bumped 5 → 6: the "Utilisateurs" block
+// needs `columns` with `cell` closures (plain functions), which cannot cross
+// the Server→Client Component prop boundary — same root cause as the form
+// block's TextField `registration` above (see DataTableUsersDemo's own doc
+// comment, components/gallery/data-table-users-demo.tsx). A genuinely new
+// escape hatch, not a loosening of an existing one.
+const PINNED_TOTAL = 6
 
 describe("gallery render escape hatch — every usage is justified and enumerated", () => {
   it("has an ESCAPE HATCH justification comment directly above every `render:` usage", () => {

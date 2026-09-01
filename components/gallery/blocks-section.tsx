@@ -4,6 +4,10 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Example, type ExampleLabels } from "@/components/gallery/example"
 import { TextFieldDemo } from "@/components/gallery/text-field-demo"
+import {
+  DataTableUsersDemo,
+  type DataTableUsersLabels,
+} from "@/components/gallery/data-table-users-demo"
 import type { Snippet } from "@/components/gallery/snippet"
 
 export type BlocksLabels = ExampleLabels & {
@@ -12,6 +16,8 @@ export type BlocksLabels = ExampleLabels & {
   formName: string
   emptyName: string
   statRowName: string
+  usersName: string
+  usersLabels: DataTableUsersLabels
   pageHeaderTitle: string
   pageHeaderSubtitle: string
   pageHeaderCta: string
@@ -265,6 +271,54 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
           },
         ],
       },
+    },
+    // Utilisateurs — DataTable + Badge + Button, a COMPOSITION (T7,
+    // s17-data-table), not a second table component. Avatar (plain tokens,
+    // no new primitive), name, role, status, actions. The snippet below is
+    // the real `DataTable` call a consumer would write — `columns`/`rows`
+    // use the same `{ code, value }` override as TextField's `registration`
+    // (snippet.ts): `code` is what's displayed, `value` is an inert
+    // placeholder never actually rendered (render bypasses renderSnippet
+    // entirely once a `render` prop is given — see example.tsx, and the
+    // ESCAPE HATCH comment right above the `render:` line below for why).
+    {
+      name: labels.usersName,
+      snippet: {
+        component: "DataTable",
+        props: {
+          caption: labels.usersLabels.caption,
+          columns: {
+            code: `[
+  { key: "name", header: "${labels.usersLabels.columnUser}", sortable: true, cell: (row) => /* … */ row.name },
+  { key: "role", header: "${labels.usersLabels.columnRole}", sortable: true },
+  { key: "statusLabel", header: "${labels.usersLabels.columnStatus}", sortable: true, cell: (row) => <Badge tone={row.statusTone}>{row.statusLabel}</Badge> },
+  { key: "id", header: "${labels.usersLabels.columnActions}", align: "end", cell: () => <Button size="sm" variant="subtle">${labels.usersLabels.actionView}</Button> },
+]`,
+            value: [],
+          },
+          rows: {
+            code: `[{ id: "1", name: "${labels.usersLabels.row1Name}", role: "${labels.usersLabels.row1Role}", statusLabel: "${labels.usersLabels.row1Status}", statusTone: "success" }, /* … */]`,
+            value: [],
+          },
+          rowKey: "id",
+          pageSize: 3,
+          loadingLabel: labels.usersLabels.loadingLabel,
+          emptyLabel: labels.usersLabels.emptyLabel,
+          paginationLabels: {
+            code: `{ previous: "${labels.usersLabels.previousLabel}", next: "${labels.usersLabels.nextLabel}", pageOfTemplate: "${labels.usersLabels.pageOfTemplate}" }`,
+            value: {},
+          },
+        },
+      },
+      // ESCAPE HATCH: `columns` above carries `cell` closures (plain
+      // functions) — React/Next refuses a bare function prop passed from
+      // this Server Component's render pass into DataTable (a Client
+      // Component), the same root cause as the form block's TextField
+      // `registration` above. `DataTableUsersDemo` (components/gallery/
+      // data-table-users-demo.tsx — see its own doc comment) builds the
+      // whole columns/rows tree INSIDE its own "use client" module instead,
+      // so no function ever crosses the server/client boundary as a prop.
+      render: <DataTableUsersDemo labels={labels.usersLabels} />,
     },
   ]
 

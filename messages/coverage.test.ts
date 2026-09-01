@@ -199,6 +199,9 @@ const GALLERY_KEYS = [
   "selectOptionALabel",
   "selectOptionBLabel",
   "statLabelExample",
+  // s15-gallery-feedback — realistic Card example content
+  "cardExampleTitle",
+  "cardExampleBody",
   "codeShow",
   "codeHide",
   "modalTriggerFor",
@@ -210,6 +213,10 @@ const GALLERY_KEYS = [
   "lightboxPrev",
   "lightboxNext",
   "localeCaption",
+  // s15-gallery-feedback (second follow-up) — caption for the Button
+  // group's bg-pine patch (see primitives-section.tsx), same precedent as
+  // localeCaption above for the identical situation.
+  "buttonDarkCaption",
   "blockPageHeaderName",
   "blockPageHeaderTitle",
   "blockPageHeaderSubtitle",

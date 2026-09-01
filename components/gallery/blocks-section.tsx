@@ -53,6 +53,10 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
       name: labels.pageHeaderName,
       snippet: {
         component: "Container",
+        // s15-gallery-feedback (annotation mtisujnabzm) — none of
+        // Title/Text/Button apply their own vertical margin, so a
+        // composed block needs its own spacing between them.
+        props: { className: "space-y-3" },
         children: [
           {
             component: "Title",
@@ -77,7 +81,8 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
       name: labels.pricingName,
       snippet: {
         component: "Card",
-        props: { pad: "lg" },
+        // s15-gallery-feedback — same fix as the page header block above.
+        props: { pad: "lg", className: "space-y-3" },
         children: [
           {
             component: "SectionLabel",
@@ -191,7 +196,9 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
       name: labels.emptyName,
       snippet: {
         component: "Card",
-        props: { pad: "lg" },
+        // s15-gallery-feedback (annotation mtisujnabzm) — the circled
+        // block: title, text and button were rendering flush together.
+        props: { pad: "lg", className: "space-y-3" },
         children: [
           {
             component: "Title",

@@ -20,12 +20,18 @@ import { cn } from "@/lib/cn"
  *
  * T2 decision — the `<code>` block stays IN THE DOM AT ALL TIMES. Collapsed
  * is a CSS `hidden` class flip on the panel, never a conditional return of
- * `null` when closed, which would unmount it. s12 pins "chaque item expose son
- * JSX" by counting `<code>` blocks in the served HTML (54 across 15
- * components); unmounting until expanded would drop that count and make the
- * guarantee false unless the check were rewritten to count toggles instead —
- * a deliberate choice this story does not make. Keeping the markup mounted
- * (a few hundred bytes of hidden text per item) is the cheaper trade.
+ * `null` when closed, which would unmount it. s12 pinned "chaque item expose
+ * son JSX" by counting `<code>` blocks in the served HTML — 54 across 15
+ * components at the time; s15-gallery-feedback's T4 grouping (one
+ * `CodeDisclosure`/code block per primitive's variants, not per variant) and
+ * T5's reachability check re-verified this by real DOM query and put the
+ * count at 24 across 19 (14 primitive groups + the 5 unchanged composed
+ * blocks) — the number moves with the gallery's shape, but the property it
+ * backs does not: unmounting until expanded would drop whatever that count
+ * currently is and make the guarantee false unless the check were rewritten
+ * to count toggles instead — a deliberate choice this story does not make.
+ * Keeping the markup mounted (a few hundred bytes of hidden text per item)
+ * is the cheaper trade.
  *
  * T3 decision — the copy trigger lives in the ALWAYS-VISIBLE header row,
  * next to the show/hide toggle, not inside the collapsed panel. Copying a

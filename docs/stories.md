@@ -424,3 +424,36 @@ s12-ui-gallery, s13-gallery-ergonomics, ADR 006.
 - **Trap** : le mode sombre change les valeurs des tokens. Un graphe qui lit une couleur une seule fois au montage ne suivra pas la bascule — vérifier réellement, pas au raisonnement.
 - **Risk** : la tentation d'exposer toute l'API Recharts « au cas où ». L'encapsulation ne vaut que si elle est étroite ; une story ultérieure élargira si le besoin se présente.
 - Le combobox n'existe dans aucune bibliothèque du projet : il est à écrire. Ne pas introduire de dépendance supplémentaire pour lui sans un nouvel ADR.
+
+---
+
+## Story s15-gallery-feedback — Retours de recette sur la galerie
+
+**As a** builder **I want** que la galerie montre les composants de façon lisible et représentative, **so that** je juge un composant sur ce qu'il fait vraiment, pas sur une boîte vide répétée dix fois.
+
+### Complexity
+
+3
+
+### Acceptance criteria
+
+- [x] **Espacements dans les blocs composés** : dans « État vide » (et les autres blocs), le titre, le texte et le bouton ne sont plus collés. Vérifier tous les blocs, pas seulement celui signalé.
+- [x] **Chevron du `Select`** : le problème de positionnement constaté est diagnostiqué **sur la page tournante** puis corrigé. `components/ui/select.tsx` n'a ni `appearance-none` ni chevron custom ni réserve de padding à droite pour la flèche native — établir la cause réelle avant de corriger.
+- [x] **Cartes de démonstration représentatives** : les exemples de `Card` ne se réduisent plus à une boîte contenant le nom de la variante. Ils montrent un contenu réaliste (comme `StatCard` le fait déjà, qui est lisible précisément pour cette raison).
+- [x] **Variantes groupées** : les déclinaisons d'un même composant (tons et tailles de `Badge`, variantes de `Button`…) sont présentées **groupées, avec un seul bloc de code**, au lieu d'une carte + un « Voir le code » + un « Copier » par variante.
+- [x] Le regroupement **ne casse pas la garantie de s12** : chaque composant expose toujours son JSX de façon atteignable. Si le nombre de blocs de code change, les vérifications qui le comptent sont mises à jour **consciemment**, en disant pourquoi.
+- [x] Les variantes restent **dérivées** des tables exportées par les primitives — le regroupement ne doit pas réintroduire une liste recopiée.
+- [x] Strings i18n fr+en, zéro couleur brute, rendu correct en clair et en sombre.
+- [x] `npm run test`, `test:build`, `lint:design`, `typecheck`, `build`, `lint` passent.
+
+### Dependencies
+
+s12, s13, s14.
+
+### Agentic notes
+
+- Origine : annotations visuelles du 01/09/2026 sur `/ui` (`annotations.md`, captures dans `annotations/`).
+- **Trap** : `Select` est utilisé par `components/app/settings-form.tsx` et `components/demo/demo-banner-controls.tsx`. Une correction du chevron touche ces écrans, pas seulement la galerie — vérifier les trois.
+- **Trap** : le regroupement réduit mécaniquement le nombre de blocs de code (54 aujourd'hui). Les tests et les vérifications qui s'appuient sur ce compte doivent être mis à jour délibérément, jamais laissés dériver pour redevenir verts.
+- **Trap** : `escape-hatch.test.ts` épingle le compteur d'échappatoires `render` à 5. Le regroupement peut en créer — les justifier et bumper délibérément.
+- **Risk** : en donnant du contenu réaliste aux cartes, la tentation est d'inventer des composants. Composer l'existant ; un manque est un **design system gap** à signaler.

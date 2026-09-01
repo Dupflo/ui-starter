@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/cn"
 
 const selectBase =
-  "w-full cursor-pointer rounded-lg border border-line bg-input px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-pine focus:ring-[3px] focus:ring-pine/10 disabled:opacity-60"
+  "w-full cursor-pointer rounded-lg border border-line bg-input py-2.5 pl-3 pr-9 text-sm text-ink outline-none transition-colors focus:border-pine focus:ring-[3px] focus:ring-pine/10 disabled:opacity-60"
 
 export type SelectOption = { value: string; label: ReactNode }
 

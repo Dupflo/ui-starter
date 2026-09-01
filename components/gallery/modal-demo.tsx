@@ -39,6 +39,14 @@ export function ModalDemo({
   body: string
 }) {
   const [openSize, setOpenSize] = useState<keyof typeof sizes | null>(null)
+  // The last OPENED size, kept around after `openSize` goes null on close.
+  // `Modal` (components/ui/modal.tsx) stays mounted for EXIT_MS after `open`
+  // flips false, to play its close animation — so `size` must stay stable
+  // for that whole window too, not fall back to a default the instant
+  // `openSize` is nulled (that fallback was the bug: a modal opened at
+  // `3xl` would snap to `md`'s width one render before its close animation
+  // even started). `open` still comes from `openSize`; `size` never does.
+  const [lastSize, setLastSize] = useState<keyof typeof sizes>("md")
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -48,7 +56,10 @@ export function ModalDemo({
           type="button"
           variant="primary"
           size="sm"
-          onClick={() => setOpenSize(size as keyof typeof sizes)}
+          onClick={() => {
+            setLastSize(size as keyof typeof sizes)
+            setOpenSize(size as keyof typeof sizes)
+          }}
         >
           {triggerLabelTemplate.replace("{size}", size)}
         </Button>
@@ -57,7 +68,7 @@ export function ModalDemo({
         open={openSize !== null}
         onClose={() => setOpenSize(null)}
         title={title}
-        size={openSize ?? "md"}
+        size={lastSize}
       >
         <Text size="sm" leading>
           {body}

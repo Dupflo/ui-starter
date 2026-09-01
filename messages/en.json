@@ -186,6 +186,7 @@
     "lightboxNext": "Next image",
     "localeCaption": "Actually switches this page's language (stays on /ui).",
     "buttonDarkCaption": "Outline and ghost are designed for the app's dark (pine) chrome — patched to a dark backdrop here so they stay legible on this light preview.",
+    "buttonIconLabel": "Add",
     "blockPageHeaderName": "Page header",
     "blockPageHeaderTitle": "Hello Camille!",
     "blockPageHeaderSubtitle": "Welcome to your dashboard.",

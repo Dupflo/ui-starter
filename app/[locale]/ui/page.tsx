@@ -110,6 +110,7 @@ export default async function UiGalleryPage({
                 lightboxNext: t("lightboxNext"),
                 localeCaption: t("localeCaption"),
                 buttonDarkCaption: t("buttonDarkCaption"),
+                buttonIconLabel: t("buttonIconLabel"),
               }}
             />
 

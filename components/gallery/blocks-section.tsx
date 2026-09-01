@@ -77,22 +77,48 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
       },
     },
     // Pricing section — Card + Badge + Button + SectionLabel, as on /pricing.
+    //
+    // s16-gallery-fixes (annotation `mtiw7nypry9`, "Card buggué") —
+    // SectionLabel and Badge are both `inline-flex` (section-label.tsx,
+    // badge.tsx), so they flow onto the SAME LINE with no separation: the
+    // Card's `space-y-3` sets a vertical margin (`margin-block-end` in this
+    // Tailwind v4 build), which cannot create a gap between two elements
+    // sharing one line horizontally. Confirmed live (headless Chrome,
+    // DEMO_MODE=1): their edges touched at the exact same x — 317.859375 —
+    // with zero gap. Diagnosed AND checked out at f53ce0e (s13, before s15
+    // added `space-y-3` here) to rule out a regression: the same zero gap
+    // measured there too, because this Card had no spacing className at
+    // all back then. PRE-EXISTING DEFECT, not an s15 regression — s15's
+    // `space-y-3` did its job on the block-level siblings below (Title/
+    // Text/Button really did gain gaps), it just never could have reached
+    // this pair, which isn't block-level in the first place.
+    //
+    // Fix: wrap SectionLabel + Badge in their own flex-row (plain "div"
+    // snippet node, same precedent as the form block's spacing wrapper
+    // below) with a real `gap-3` — expressed IN the snippet, not a
+    // `render` override, so the copyable code keeps matching the preview
+    // (s12 major 2).
     {
       name: labels.pricingName,
       snippet: {
         component: "Card",
-        // s15-gallery-feedback — same fix as the page header block above.
         props: { pad: "lg", className: "space-y-3" },
         children: [
           {
-            component: "SectionLabel",
-            props: { index: "01" },
-            children: labels.pricingKicker,
-          },
-          {
-            component: "Badge",
-            props: { tone: "pine" },
-            children: labels.pricingBadge,
+            component: "div",
+            props: { className: "flex flex-wrap items-center gap-3" },
+            children: [
+              {
+                component: "SectionLabel",
+                props: { index: "01" },
+                children: labels.pricingKicker,
+              },
+              {
+                component: "Badge",
+                props: { tone: "pine" },
+                children: labels.pricingBadge,
+              },
+            ],
           },
           {
             component: "Title",

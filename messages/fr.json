@@ -186,6 +186,7 @@
     "lightboxNext": "Image suivante",
     "localeCaption": "Change réellement la langue de cette page (reste sur /ui).",
     "buttonDarkCaption": "Outline et ghost sont conçus pour le chrome sombre (pine) de l'app — patchés sur un fond sombre ici pour rester lisibles sur cet aperçu clair.",
+    "buttonIconLabel": "Ajouter",
     "blockPageHeaderName": "En-tête de page",
     "blockPageHeaderTitle": "Bonjour Camille !",
     "blockPageHeaderSubtitle": "Bienvenue sur votre tableau de bord.",

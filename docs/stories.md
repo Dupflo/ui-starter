@@ -457,3 +457,72 @@ s12, s13, s14.
 - **Trap** : le regroupement réduit mécaniquement le nombre de blocs de code (54 aujourd'hui). Les tests et les vérifications qui s'appuient sur ce compte doivent être mis à jour délibérément, jamais laissés dériver pour redevenir verts.
 - **Trap** : `escape-hatch.test.ts` épingle le compteur d'échappatoires `render` à 5. Le regroupement peut en créer — les justifier et bumper délibérément.
 - **Risk** : en donnant du contenu réaliste aux cartes, la tentation est d'inventer des composants. Composer l'existant ; un manque est un **design system gap** à signaler.
+
+---
+
+## Story s16-gallery-fixes — Carte tarifaire cassée et bouton icône sans icône
+
+**As a** builder **I want** que les exemples de la galerie soient corrects et parlants, **so that** je ne juge pas un composant sur un rendu cassé ou sur un libellé qui remplace ce qu'il devrait montrer.
+
+### Complexity
+
+2
+
+### Acceptance criteria
+
+- [x] **Bloc « Section tarifaire »** : le rendu est corrigé. La cause est **diagnostiquée sur la page tournante** avant toute modification — établir si c'est une régression de s15 (`className: "space-y-3"` ajouté à la `Card`) ou un défaut antérieur, et le dire.
+- [x] **Bouton de taille `icon`** : l'exemple affiche une **vraie icône**, pas le mot « icon ». Un bouton icône dont le contenu est son propre nom de taille ne montre pas ce que fait le composant.
+- [x] La correction du bouton icône reste **dérivée** : elle ne doit pas réintroduire une liste de tailles recopiée, et une nouvelle taille doit continuer d'apparaître sans toucher la galerie.
+- [x] Le JSX copiable reste cohérent avec le rendu (garantie s12) et le compte de blocs de code reste vérifié par requête DOM.
+- [x] Strings i18n fr+en, zéro couleur brute, rendu correct en clair et en sombre.
+- [x] `npm run test`, `test:build`, `lint:design`, `typecheck`, `build`, `lint` passent.
+
+### Dependencies
+
+s15-gallery-feedback.
+
+### Agentic notes
+
+- Origine : annotations visuelles du 01/09/2026 sur `/ui` (`mtiw7nypry9`, `mtiw8hcnkwy`).
+- **Piste pour la carte tarifaire** : `space-y-*` n'espace que des enfants **blocs**. `SectionLabel` et `Badge` sont inline (`inline-flex`), donc ils se retrouvent sur la même ligne sans séparation, ce que la capture semble montrer. À confirmer en observant, pas en supposant — l'hypothèse du coordinateur s'est déjà révélée fausse sur le chevron du `Select` en s15.
+- **Trap** : la correction doit rester exprimée **dans le `Snippet`**, pas dans un `render`, sinon le code copiable diverge du rendu (major fermé en s12).
+- **Trap** : `escape-hatch.test.ts` épingle le compteur à 5.
+- **Risk** : pour l'icône, composer l'existant. Les icônes du projet sont des SVG inline (voir `components/app/app-sidebar.tsx`) ; un besoin non couvert est un **design system gap** à signaler.
+
+---
+
+## Story s17-data-table — Tableau de données et tableau d'utilisateurs
+
+**As a** builder **I want** un composant de tableau de données et un bloc « utilisateurs » composé dessus, **so that** je livre l'écran le plus courant d'un SaaS sans le réinventer ni improviser hors système.
+
+### Complexity
+
+4
+
+### Acceptance criteria
+
+- [ ] **`DataTable`** dans `components/ui/` : colonnes typées, lignes typées, en-têtes.
+- [ ] **Tri par colonne** au clic sur l'en-tête, avec indication visuelle du sens, et **accessible** : l'en-tête triable est un contrôle actionnable au clavier, et l'état de tri est annoncé (`aria-sort`).
+- [ ] **Pagination** : navigation entre les pages, indication de la page courante et du total. Utilisable au clavier.
+- [ ] **État vide** et **état de chargement** distincts et explicites.
+- [ ] **Rendu de cellule personnalisable**, pour composer un `Badge`, un avatar ou un `Button` dans une cellule sans que `DataTable` connaisse ces composants.
+- [ ] Le typage lie les colonnes aux lignes : référencer une clé qui n'existe pas dans la ligne doit être une **erreur de compilation**, pas un `undefined` silencieux.
+- [ ] **Bloc « Utilisateurs »** dans la galerie, composé sur `DataTable` (avatar, nom, rôle, statut, actions) — une composition, pas un second composant.
+- [ ] Responsive : lisible en mobile (défilement horizontal ou adaptation), à décider explicitement.
+- [ ] Enregistré dans la galerie ; le test « une primitive ne peut pas manquer en silence » le couvre **sans modification**.
+- [ ] `docs/design-system.md` gagne sa section décrivant **ce qui est réellement livré**.
+- [ ] Strings i18n fr+en. Zéro couleur brute. Rendu correct en clair **et** en sombre.
+- [ ] `npm run test`, `test:build`, `lint:design`, `typecheck`, `build`, `lint` passent.
+
+### Dependencies
+
+s12 (galerie), s15, s16. Décision humaine du 01/09/2026 sur le périmètre : tri + pagination + états, la sélection de lignes est **hors périmètre**.
+
+### Agentic notes
+
+- Origine : annotation visuelle du 01/09/2026 (`mtiw9cmtz7x`) — « Il manque un composant de type tableau de données et un composant avec tableau d'utilisateurs ».
+- **Aucune dépendance** : ni TanStack Table ni équivalent sans un nouvel ADR. Le tri et la pagination d'une table simple sont du code, pas une bibliothèque.
+- **Trap** : le tri et la pagination impliquent un état → Client Component. Garder la frontière petite ; les pages restent serveur.
+- **Trap** : `<table>` a des contraintes d'accessibilité propres — `scope` sur les en-têtes, `aria-sort` sur la colonne triée, et un `<caption>` ou un `aria-label`. Une table sans nom accessible est un défaut (cf. le combobox de s14, qui tirait son nom du placeholder).
+- **Trap** : ce repo ne peut pas tester l'interaction réelle sous Vitest (pas de jsdom, `components/ui/*` non importable). Le tri et la pagination au clavier se vérifient en pilotant un navigateur, comme s14 et s15 l'ont fait, puis se listent en « non vérifié » si ce n'est pas possible.
+- **Risk** : la tentation de couvrir tous les cas. Le périmètre est arrêté ; un besoin au-delà est une story ultérieure, pas une extension silencieuse.

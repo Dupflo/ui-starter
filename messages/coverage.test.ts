@@ -217,6 +217,9 @@ const GALLERY_KEYS = [
   // group's bg-pine patch (see primitives-section.tsx), same precedent as
   // localeCaption above for the identical situation.
   "buttonDarkCaption",
+  // s16-gallery-fixes — accessible name for the icon-size Button example
+  // (see primitives-section.tsx's BUTTON_ICON_SIZE_EXAMPLE).
+  "buttonIconLabel",
   "blockPageHeaderName",
   "blockPageHeaderTitle",
   "blockPageHeaderSubtitle",

@@ -233,6 +233,28 @@ const GALLERY_KEYS = [
   "blockStatLabel1",
   "blockStatLabel2",
   "blockStatLabel3",
+  // s14-dataviz-and-combobox T7 — chart wrapper demos (app/[locale]/ui,
+  // components/gallery/primitives-section.tsx)
+  "chartSeriesVisits",
+  "chartCategoryJan",
+  "chartCategoryFeb",
+  "chartCategoryMar",
+  "chartBarSeriesSignups",
+  "chartBarCategoryQ1",
+  "chartBarCategoryQ2",
+  "chartBarCategoryQ3",
+  "chartDonutSliceFree",
+  "chartDonutSlicePro",
+  "chartDonutSliceEnterprise",
+  // s14-dataviz-and-combobox T7 — combobox demo
+  "comboboxLabel",
+  "comboboxPlaceholder",
+  "comboboxEmptyLabel",
+  "comboboxResultsLabel",
+  "comboboxOptionFrance",
+  "comboboxOptionGermany",
+  "comboboxOptionSpain",
+  "comboboxNoMatchQuery",
 ] as const
 
 // ─── Tests ───────────────────────────────────────────────────────────────────

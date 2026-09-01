@@ -402,6 +402,11 @@ s12-ui-gallery.
 - [ ] Les couleurs des graphes viennent des tokens (`var(--color-…)`), jamais d'un hex littéral ; `check-design-tokens` reste vert.
 - [ ] Les graphes rendent correctement en clair **et** en sombre — les couleurs suivent le re-theme.
 - [ ] Le **poids réel ajouté au bundle est mesuré et inscrit** dans la story (ADR 006 l'exige explicitement : mesuré, pas estimé).
+      **Mesuré (s14, `.next/diagnostics/route-bundle-stats.json`, route `/[locale]/ui`, 3 graphiques
+      réellement rendus)** : First Load JS non compressé 869 915 B → 1 303 539 B (**+433 624 B, soit
+      +423,5 KiB**) ; gzip 246 770 B → 370 010 B (**+123 240 B, soit +120,4 KiB**). Les autres routes ne
+      bougent que de +28 à +30 B (clés i18n ajoutées) — Recharts/Redux Toolkit restent isolés à `/ui` grâce au
+      découpage par route de Next.js.
 - [ ] Les nouveaux composants apparaissent dans la galerie via le registre existant, et le test « une primitive ne peut pas manquer en silence » les couvre sans modification.
 - [ ] `docs/design-system.md` gagne les sections correspondantes, décrivant ce qui est réellement livré.
 - [ ] Toutes les strings en i18n fr+en. Rend en clair et en sombre.

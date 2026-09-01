@@ -1,6 +1,10 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, StatCard } from "@/components/ui/card"
+import { ChartBar } from "@/components/ui/chart-bar"
+import { ChartDonut } from "@/components/ui/chart-donut"
+import { ChartLine } from "@/components/ui/chart-line"
+import { Combobox } from "@/components/ui/combobox"
 import { Container } from "@/components/ui/container"
 import { Lightbox } from "@/components/ui/lightbox"
 import { LocaleMenu } from "@/components/ui/locale-menu"
@@ -25,6 +29,10 @@ export const COMPONENTS = {
   Button,
   Card,
   StatCard,
+  ChartBar,
+  ChartDonut,
+  ChartLine,
+  Combobox,
   Container,
   FieldLabel,
   Lightbox,

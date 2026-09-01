@@ -6,6 +6,7 @@ import { ChartDonut } from "@/components/ui/chart-donut"
 import { ChartLine } from "@/components/ui/chart-line"
 import { Combobox } from "@/components/ui/combobox"
 import { Container } from "@/components/ui/container"
+import { DataTable } from "@/components/ui/data-table"
 import { Lightbox } from "@/components/ui/lightbox"
 import { LocaleMenu } from "@/components/ui/locale-menu"
 import { LocaleSwitcher } from "@/components/ui/locale-switcher"
@@ -34,6 +35,7 @@ export const COMPONENTS = {
   ChartLine,
   Combobox,
   Container,
+  DataTable,
   FieldLabel,
   Lightbox,
   LocaleMenu,

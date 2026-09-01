@@ -142,6 +142,31 @@ export type PrimitivesLabels = ExampleLabels & {
    *  icon replaced the literal word "icon" — see
    *  BUTTON_ICON_SIZE_EXAMPLE's doc comment). */
   buttonIconLabel: string
+  // T9 (s17-data-table) — DataTable primitive demo
+  dataTableCaption: string
+  dataTableColumnName: string
+  dataTableColumnEmail: string
+  dataTableColumnRole: string
+  dataTableLoadingLabel: string
+  dataTableEmptyLabel: string
+  dataTablePreviousLabel: string
+  dataTableNextLabel: string
+  /** RAW i18n template with literal "{page}" and "{total}" placeholders —
+   *  DataTable itself interpolates it (same convention as Combobox's
+   *  resultsLabel and Modal's "{size}" template). */
+  dataTablePageOfTemplate: string
+  dataTableRow1Name: string
+  dataTableRow1Email: string
+  dataTableRow1Role: string
+  dataTableRow2Name: string
+  dataTableRow2Email: string
+  dataTableRow2Role: string
+  dataTableRow3Name: string
+  dataTableRow3Email: string
+  dataTableRow3Role: string
+  dataTableRow4Name: string
+  dataTableRow4Email: string
+  dataTableRow4Role: string
 }
 
 /**
@@ -732,6 +757,76 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
             ]}
           />
         </div>
+      </PrimitiveGroup>
+
+      <PrimitiveGroup name="DataTable">
+        <Example
+          labels={exampleLabels}
+          snippet={{
+            component: "DataTable",
+            props: {
+              caption: labels.dataTableCaption,
+              columns: {
+                code: `[{ key: "name", header: "${labels.dataTableColumnName}", sortable: true }, { key: "email", header: "${labels.dataTableColumnEmail}" }, { key: "role", header: "${labels.dataTableColumnRole}", sortable: true }]`,
+                value: [
+                  {
+                    key: "name",
+                    header: labels.dataTableColumnName,
+                    sortable: true,
+                  },
+                  { key: "email", header: labels.dataTableColumnEmail },
+                  {
+                    key: "role",
+                    header: labels.dataTableColumnRole,
+                    sortable: true,
+                  },
+                ],
+              },
+              rows: {
+                code: `[{ id: "1", name: "${labels.dataTableRow1Name}", email: "${labels.dataTableRow1Email}", role: "${labels.dataTableRow1Role}" }, /* … */]`,
+                value: [
+                  {
+                    id: "1",
+                    name: labels.dataTableRow1Name,
+                    email: labels.dataTableRow1Email,
+                    role: labels.dataTableRow1Role,
+                  },
+                  {
+                    id: "2",
+                    name: labels.dataTableRow2Name,
+                    email: labels.dataTableRow2Email,
+                    role: labels.dataTableRow2Role,
+                  },
+                  {
+                    id: "3",
+                    name: labels.dataTableRow3Name,
+                    email: labels.dataTableRow3Email,
+                    role: labels.dataTableRow3Role,
+                  },
+                  {
+                    id: "4",
+                    name: labels.dataTableRow4Name,
+                    email: labels.dataTableRow4Email,
+                    role: labels.dataTableRow4Role,
+                  },
+                ],
+              },
+              rowKey: "id",
+              loadingLabel: labels.dataTableLoadingLabel,
+              emptyLabel: labels.dataTableEmptyLabel,
+              pageSize: 2,
+              paginationLabels: {
+                code: `{ previous: "${labels.dataTablePreviousLabel}", next: "${labels.dataTableNextLabel}", pageOfTemplate: "${labels.dataTablePageOfTemplate}" }`,
+                value: {
+                  previous: labels.dataTablePreviousLabel,
+                  next: labels.dataTableNextLabel,
+                  pageOfTemplate: labels.dataTablePageOfTemplate,
+                },
+              },
+            },
+          }}
+          previewClassName="w-full"
+        />
       </PrimitiveGroup>
 
       <PrimitiveGroup name="LocaleMenu / LocaleSwitcher">

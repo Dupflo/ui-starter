@@ -42,6 +42,34 @@ type GroupItem = {
  *  with no background of their own are checked against THIS token. */
 const GALLERY_PREVIEW_SURFACE = "paper"
 
+/** s16-gallery-fixes (annotation `mtiw8hcnkwy`) — the Button size group's
+ *  `icon`-size example content: a real 16×16 stroke icon instead of the
+ *  literal word "icon" (which the old `children: size` produced — an
+ *  icon-only button whose content is its own size name demonstrates
+ *  nothing). Same visual convention as the nav icons in
+ *  `components/app/app-sidebar.tsx`'s `ICONS`/`NavIcon` (viewBox 0 0 16 16,
+ *  `stroke="currentColor"`, `strokeWidth={1.5}`, round caps) — composed as
+ *  plain SVG snippet nodes (lowercase `component`, see snippet.ts), the
+ *  same way that file composes its own icons; there is no Icon primitive
+ *  in the design system to reach for instead (checked docs/design-system.md
+ *  — none listed). A generic "add" glyph, since this demo has no specific
+ *  action to illustrate. */
+const BUTTON_ICON_SIZE_EXAMPLE: Snippet = {
+  component: "svg",
+  props: {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 16 16",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.5,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true",
+  },
+  children: { component: "path", props: { d: "M8 3.5v9M3.5 8h9" } },
+}
+
 /** One `ExampleGrid` cell: either a single example, or a group of variants
  *  sharing one preview row and one code block (s15-gallery-feedback). */
 type GridItem =
@@ -109,6 +137,11 @@ export type PrimitivesLabels = ExampleLabels & {
    *  identical situation (LocaleMenu/LocaleSwitcher's own dark-chrome
    *  preview). */
   buttonDarkCaption: string
+  /** s16-gallery-fixes — accessible name for the Button size group's
+   *  `icon`-size example, which no longer carries visible text (a real SVG
+   *  icon replaced the literal word "icon" — see
+   *  BUTTON_ICON_SIZE_EXAMPLE's doc comment). */
+  buttonIconLabel: string
 }
 
 /**
@@ -162,8 +195,16 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
                 (size): GroupItem => ({
                   snippet: {
                     component: "Button",
-                    props: { size },
-                    children: size,
+                    // s16-gallery-fixes — every OTHER size still shows its
+                    // own name as plain text; only "icon" swaps in a real
+                    // icon (see BUTTON_ICON_SIZE_EXAMPLE's doc comment) plus
+                    // an aria-label, since it no longer has visible text to
+                    // serve as its accessible name.
+                    props:
+                      size === "icon"
+                        ? { size, "aria-label": labels.buttonIconLabel }
+                        : { size },
+                    children: size === "icon" ? BUTTON_ICON_SIZE_EXAMPLE : size,
                   },
                 }),
               ),

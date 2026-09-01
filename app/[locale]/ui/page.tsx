@@ -70,6 +70,8 @@ export default async function UiGalleryPage({
                 selectOptionALabel: t("selectOptionALabel"),
                 selectOptionBLabel: t("selectOptionBLabel"),
                 statLabelExample: t("statLabelExample"),
+                cardExampleTitle: t("cardExampleTitle"),
+                cardExampleBody: t("cardExampleBody"),
                 chartSeriesVisits: t("chartSeriesVisits"),
                 chartCategoryJan: t("chartCategoryJan"),
                 chartCategoryFeb: t("chartCategoryFeb"),
@@ -107,6 +109,7 @@ export default async function UiGalleryPage({
                 lightboxPrev: t("lightboxPrev"),
                 lightboxNext: t("lightboxNext"),
                 localeCaption: t("localeCaption"),
+                buttonDarkCaption: t("buttonDarkCaption"),
               }}
             />
 

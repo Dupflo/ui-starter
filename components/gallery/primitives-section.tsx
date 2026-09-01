@@ -15,17 +15,38 @@ import {
   tones as textTones,
 } from "@/components/ui/text"
 import { tones as sectionLabelTones } from "@/components/ui/section-label"
-import { Example, type ExampleLabels } from "@/components/gallery/example"
+import {
+  Example,
+  GroupedExample,
+  type ExampleLabels,
+} from "@/components/gallery/example"
 import { ModalDemo } from "@/components/gallery/modal-demo"
 import { LightboxDemo } from "@/components/gallery/lightbox-demo"
 import { TextFieldDemo } from "@/components/gallery/text-field-demo"
+import { surfacePatch, textToken } from "@/components/gallery/surface-contrast"
 import type { Snippet } from "@/components/gallery/snippet"
 
-type GridItem = {
+/** One `GroupedExample` item: a live render (from the snippet, or an escape
+ *  hatch) plus the snippet `codeOf` reads for the shared code block.
+ *  `previewClassName` is a per-item surface patch (s15-gallery-feedback
+ *  follow-up) — see `surfacePatch` and GroupedExample's own doc
+ *  comment. */
+type GroupItem = {
   snippet: Snippet
   render?: ReactNode
   previewClassName?: string
 }
+
+/** The gallery's default preview surface — `GroupedExample`/`Example`'s own
+ *  `bg-paper` base class (example.tsx). Variants that set a text colour
+ *  with no background of their own are checked against THIS token. */
+const GALLERY_PREVIEW_SURFACE = "paper"
+
+/** One `ExampleGrid` cell: either a single example, or a group of variants
+ *  sharing one preview row and one code block (s15-gallery-feedback). */
+type GridItem =
+  | { snippet: Snippet; render?: ReactNode; previewClassName?: string }
+  | { items: GroupItem[]; previewClassName?: string }
 
 export type PrimitivesLabels = ExampleLabels & {
   disabledLabel: string
@@ -36,6 +57,11 @@ export type PrimitivesLabels = ExampleLabels & {
   selectOptionALabel: string
   selectOptionBLabel: string
   statLabelExample: string
+  /** s15-gallery-feedback (annotation mtit5cqcr4q) — realistic body content
+   *  for Card's variant/pad examples, so they read like StatCard already
+   *  does instead of showing only the bare variant/pad name. */
+  cardExampleTitle: string
+  cardExampleBody: string
   // T7 (s14-dataviz-and-combobox) — chart wrapper demo data (series /
   // category names rendered on-chart: axis ticks, legend, tooltip).
   chartSeriesVisits: string
@@ -78,6 +104,11 @@ export type PrimitivesLabels = ExampleLabels & {
   lightboxPrev: string
   lightboxNext: string
   localeCaption: string
+  /** s15-gallery-feedback (second follow-up) — caption for the Button
+   *  group's bg-pine patch, same precedent as `localeCaption` above for the
+   *  identical situation (LocaleMenu/LocaleSwitcher's own dark-chrome
+   *  preview). */
+  buttonDarkCaption: string
 }
 
 /**
@@ -97,93 +128,141 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
   return (
     <div className="mt-10 space-y-14">
       <PrimitiveGroup name="Button">
-        <ExampleGrid
-          labels={exampleLabels}
-          items={[
-            ...Object.keys(buttonVariants).map(
-              (variant): GridItem => ({
+        <Text size="xs" className="mb-3">
+          {labels.buttonDarkCaption}
+        </Text>
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            items={[
+              // s15-gallery-feedback (follow-up) — `outline`/`ghost` set
+              // `text-paper` with no background of their own: designed for
+              // the dark `pine` chrome, invisible on this row's default
+              // `bg-paper`. Derived from each variant's OWN class string via
+              // `surfacePatch` — never a hardcoded "outline/ghost are the
+              // dark ones" list, which would silently stop covering a new
+              // variant shaped the same way later (see
+              // surface-contrast.test.ts's "Button variants" block, which
+              // guards this behaviourally rather than by variant name).
+              ...Object.entries(buttonVariants).map(
+                ([variant, variantClasses]): GroupItem => ({
+                  snippet: {
+                    component: "Button",
+                    props: { variant },
+                    children: variant,
+                  },
+                  previewClassName: surfacePatch(
+                    variantClasses,
+                    GALLERY_PREVIEW_SURFACE,
+                    "bg-pine",
+                  ),
+                }),
+              ),
+              ...Object.keys(buttonSizes).map(
+                (size): GroupItem => ({
+                  snippet: {
+                    component: "Button",
+                    props: { size },
+                    children: size,
+                  },
+                }),
+              ),
+              {
                 snippet: {
                   component: "Button",
-                  props: { variant },
-                  children: variant,
+                  props: { disabled: true },
+                  children: labels.disabledLabel,
                 },
-              }),
-            ),
-            ...Object.keys(buttonSizes).map(
-              (size): GridItem => ({
-                snippet: {
-                  component: "Button",
-                  props: { size },
-                  children: size,
-                },
-              }),
-            ),
-            {
-              snippet: {
-                component: "Button",
-                props: { disabled: true },
-                children: labels.disabledLabel,
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </div>
       </PrimitiveGroup>
 
       <PrimitiveGroup name="Badge">
-        <ExampleGrid
-          labels={exampleLabels}
-          items={[
-            ...Object.keys(badgeTones).map(
-              (tone): GridItem => ({
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            items={[
+              ...Object.keys(badgeTones).map(
+                (tone): GroupItem => ({
+                  snippet: {
+                    component: "Badge",
+                    props: { tone },
+                    children: tone,
+                  },
+                }),
+              ),
+              ...Object.keys(badgeSizes).map(
+                (size): GroupItem => ({
+                  snippet: {
+                    component: "Badge",
+                    props: { size },
+                    children: size,
+                  },
+                }),
+              ),
+              {
                 snippet: {
                   component: "Badge",
-                  props: { tone },
-                  children: tone,
+                  props: { tone: "success", dot: true },
+                  children: "dot",
                 },
-              }),
-            ),
-            ...Object.keys(badgeSizes).map(
-              (size): GridItem => ({
-                snippet: {
-                  component: "Badge",
-                  props: { size },
-                  children: size,
-                },
-              }),
-            ),
-            {
-              snippet: {
-                component: "Badge",
-                props: { tone: "success", dot: true },
-                children: "dot",
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </div>
       </PrimitiveGroup>
 
       <PrimitiveGroup name="Card / StatCard">
         <ExampleGrid
           labels={exampleLabels}
           items={[
-            ...Object.keys(cardVariants).map(
-              (variant): GridItem => ({
-                snippet: {
-                  component: "Card",
-                  props: { variant },
-                  children: variant,
-                },
-              }),
-            ),
-            ...Object.keys(cardPads).map(
-              (pad): GridItem => ({
-                snippet: {
-                  component: "Card",
-                  props: { pad },
-                  children: pad,
-                },
-              }),
-            ),
+            // s15-gallery-feedback (annotation mtit5cqcr4q) — realistic
+            // content (kicker + title + body), like StatCard already has,
+            // instead of a bare variant name; grouped (annotation
+            // mtit5zbxei1) into one preview row + one code block, like
+            // Badge/Button above. StatCard stays its own card: a different
+            // component, not a variant of Card.
+            {
+              items: [
+                ...Object.entries(cardVariants).map(
+                  ([variant, variantClasses]): GroupItem => ({
+                    snippet: {
+                      component: "Card",
+                      props: { variant, className: "space-y-2" },
+                      children: cardExampleChildren(
+                        variant,
+                        // Derived from the variant's own resting text
+                        // colour (`textToken`, not a hardcoded "pine is the
+                        // dark one" assumption or a raw substring match) —
+                        // so a renamed/added dark variant using the SAME
+                        // `text-paper` override still gets readable
+                        // children without touching this file. That is a
+                        // narrower claim than "any dark variant": Tailwind
+                        // cannot build `text-${token}` from an arbitrary
+                        // token at runtime (static class extraction, ADR
+                        // 002), so `cardExampleChildren`'s override is
+                        // still the literal `text-paper` — a future dark
+                        // variant whose own text colour is some OTHER
+                        // token would still need that literal touched.
+                        textToken(variantClasses) === "paper",
+                        labels,
+                      ),
+                    },
+                  }),
+                ),
+                ...Object.keys(cardPads).map(
+                  (pad): GroupItem => ({
+                    snippet: {
+                      component: "Card",
+                      props: { pad, className: "space-y-2" },
+                      children: cardExampleChildren(pad, false, labels),
+                    },
+                  }),
+                ),
+              ],
+            },
             {
               snippet: {
                 component: "StatCard",
@@ -199,47 +278,61 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
       </PrimitiveGroup>
 
       <PrimitiveGroup name="Title">
-        <ExampleGrid
-          labels={exampleLabels}
-          items={Object.keys(titleLooks).map(
-            (as): GridItem => ({
-              snippet: { component: "Title", props: { as }, children: as },
-            }),
-          )}
-        />
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            items={Object.keys(titleLooks).map(
+              (as): GroupItem => ({
+                snippet: { component: "Title", props: { as }, children: as },
+              }),
+            )}
+          />
+        </div>
       </PrimitiveGroup>
 
       <PrimitiveGroup name="Text">
-        <ExampleGrid
-          labels={exampleLabels}
-          items={[
-            ...Object.keys(textSizes).map(
-              (size): GridItem => ({
-                snippet: { component: "Text", props: { size }, children: size },
-              }),
-            ),
-            ...Object.keys(textTones).map(
-              (tone): GridItem => ({
-                snippet: { component: "Text", props: { tone }, children: tone },
-              }),
-            ),
-          ]}
-        />
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            items={[
+              ...Object.keys(textSizes).map(
+                (size): GroupItem => ({
+                  snippet: {
+                    component: "Text",
+                    props: { size },
+                    children: size,
+                  },
+                }),
+              ),
+              ...Object.keys(textTones).map(
+                (tone): GroupItem => ({
+                  snippet: {
+                    component: "Text",
+                    props: { tone },
+                    children: tone,
+                  },
+                }),
+              ),
+            ]}
+          />
+        </div>
       </PrimitiveGroup>
 
       <PrimitiveGroup name="SectionLabel">
-        <ExampleGrid
-          labels={exampleLabels}
-          items={Object.keys(sectionLabelTones).map(
-            (tone): GridItem => ({
-              snippet: {
-                component: "SectionLabel",
-                props: { tone, index: "01" },
-                children: tone,
-              },
-            }),
-          )}
-        />
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            items={Object.keys(sectionLabelTones).map(
+              (tone): GroupItem => ({
+                snippet: {
+                  component: "SectionLabel",
+                  props: { tone, index: "01" },
+                  children: tone,
+                },
+              }),
+            )}
+          />
+        </div>
       </PrimitiveGroup>
 
       <PrimitiveGroup name="Container">
@@ -292,47 +385,54 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
                 children: labels.fieldLabelExample,
               },
             },
+            // s15-gallery-feedback — TextField's two demo states (plain,
+            // with error) grouped into one preview row + one code block.
             {
-              snippet: {
-                component: "TextField",
-                props: {
-                  label: labels.fieldLabelExample,
-                  type: "email",
-                  registration: { code: 'register("email")', value: {} },
+              items: [
+                {
+                  snippet: {
+                    component: "TextField",
+                    props: {
+                      label: labels.fieldLabelExample,
+                      type: "email",
+                      registration: { code: 'register("email")', value: {} },
+                    },
+                  },
+                  // ESCAPE HATCH: TextField spreads a react-hook-form
+                  // `registration` (incl. a `ref` callback) onto its
+                  // <input> — React refuses that from a Server Component
+                  // render pass. TextFieldDemo is the client boundary that
+                  // makes it real; the snippet above is otherwise identical
+                  // (see TextFieldDemo's own doc comment).
+                  render: (
+                    <TextFieldDemo
+                      label={labels.fieldLabelExample}
+                      type="email"
+                      name="email"
+                    />
+                  ),
                 },
-              },
-              // ESCAPE HATCH: TextField spreads a react-hook-form `registration`
-              // (incl. a `ref` callback) onto its <input> — React refuses that
-              // from a Server Component render pass. TextFieldDemo is the
-              // client boundary that makes it real; the snippet above is
-              // otherwise identical (see TextFieldDemo's own doc comment).
-              render: (
-                <TextFieldDemo
-                  label={labels.fieldLabelExample}
-                  type="email"
-                  name="email"
-                />
-              ),
-            },
-            {
-              snippet: {
-                component: "TextField",
-                props: {
-                  label: labels.fieldLabelExample,
-                  type: "email",
-                  registration: { code: 'register("email")', value: {} },
-                  error: labels.errorExample,
+                {
+                  snippet: {
+                    component: "TextField",
+                    props: {
+                      label: labels.fieldLabelExample,
+                      type: "email",
+                      registration: { code: 'register("email")', value: {} },
+                      error: labels.errorExample,
+                    },
+                  },
+                  // ESCAPE HATCH: same reason as the field above.
+                  render: (
+                    <TextFieldDemo
+                      label={labels.fieldLabelExample}
+                      type="email"
+                      name="email"
+                      error={labels.errorExample}
+                    />
+                  ),
                 },
-              },
-              // ESCAPE HATCH: same reason as the field above.
-              render: (
-                <TextFieldDemo
-                  label={labels.fieldLabelExample}
-                  type="email"
-                  name="email"
-                  error={labels.errorExample}
-                />
-              ),
+              ],
             },
           ]}
         />
@@ -505,73 +605,92 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
       </PrimitiveGroup>
 
       <PrimitiveGroup name="Combobox">
-        <ExampleGrid
-          labels={exampleLabels}
-          items={[
-            {
-              snippet: {
-                component: "Combobox",
-                props: {
-                  label: labels.comboboxLabel,
-                  placeholder: labels.comboboxPlaceholder,
-                  // Forced open (no query) so the served DOM carries a
-                  // populated, role="option"-bearing listbox by default —
-                  // real usage opens on focus/typing instead.
-                  defaultOpen: true,
-                  emptyLabel: labels.comboboxEmptyLabel,
-                  resultsLabel: labels.comboboxResultsLabel,
-                  options: {
-                    code: `[{ value: "fr", label: "${labels.comboboxOptionFrance}" }, { value: "de", label: "${labels.comboboxOptionGermany}" }, { value: "es", label: "${labels.comboboxOptionSpain}" }]`,
-                    value: [
-                      { value: "fr", label: labels.comboboxOptionFrance },
-                      { value: "de", label: labels.comboboxOptionGermany },
-                      { value: "es", label: labels.comboboxOptionSpain },
-                    ],
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            // s15-gallery-feedback (follow-up) — every item below opens its
+            // own popup by default (`defaultOpen: true`); `Combobox`'s
+            // listbox is `position: absolute` (combobox.tsx), so it does
+            // not push the CodeDisclosure footer down and instead overlaid
+            // it. Kept `defaultOpen` (see combobox.tsx's own comment: it is
+            // the only way an accessible, role="option"-bearing listbox
+            // shows up in this repo's served-HTML-only test tooling) and
+            // reserved bottom padding instead.
+            //
+            // `pb-40` (160px) is sized for what the demo actually renders
+            // today — at most 3 `role="option"` rows (~122px) — NOT for
+            // `combobox.tsx`'s `max-h-60` bound (240px), which this reserve
+            // does not cover. Pinned by
+            // combobox-popup-room.test.ts's option-count guard: it fails if
+            // a demo item's option list grows past 3, so this padding can
+            // never silently stop being enough.
+            previewClassName="pb-40"
+            items={[
+              {
+                snippet: {
+                  component: "Combobox",
+                  props: {
+                    label: labels.comboboxLabel,
+                    placeholder: labels.comboboxPlaceholder,
+                    // Forced open (no query) so the served DOM carries a
+                    // populated, role="option"-bearing listbox by default —
+                    // real usage opens on focus/typing instead.
+                    defaultOpen: true,
+                    emptyLabel: labels.comboboxEmptyLabel,
+                    resultsLabel: labels.comboboxResultsLabel,
+                    options: {
+                      code: `[{ value: "fr", label: "${labels.comboboxOptionFrance}" }, { value: "de", label: "${labels.comboboxOptionGermany}" }, { value: "es", label: "${labels.comboboxOptionSpain}" }]`,
+                      value: [
+                        { value: "fr", label: labels.comboboxOptionFrance },
+                        { value: "de", label: labels.comboboxOptionGermany },
+                        { value: "es", label: labels.comboboxOptionSpain },
+                      ],
+                    },
                   },
                 },
               },
-            },
-            {
-              snippet: {
-                component: "Combobox",
-                props: {
-                  label: labels.comboboxLabel,
-                  placeholder: labels.disabledLabel,
-                  disabled: true,
-                  emptyLabel: labels.comboboxEmptyLabel,
-                  resultsLabel: labels.comboboxResultsLabel,
-                  options: {
-                    code: `[{ value: "fr", label: "${labels.comboboxOptionFrance}" }]`,
-                    value: [
-                      { value: "fr", label: labels.comboboxOptionFrance },
-                    ],
+              {
+                snippet: {
+                  component: "Combobox",
+                  props: {
+                    label: labels.comboboxLabel,
+                    placeholder: labels.disabledLabel,
+                    disabled: true,
+                    emptyLabel: labels.comboboxEmptyLabel,
+                    resultsLabel: labels.comboboxResultsLabel,
+                    options: {
+                      code: `[{ value: "fr", label: "${labels.comboboxOptionFrance}" }]`,
+                      value: [
+                        { value: "fr", label: labels.comboboxOptionFrance },
+                      ],
+                    },
                   },
                 },
               },
-            },
-            {
-              snippet: {
-                component: "Combobox",
-                props: {
-                  label: labels.comboboxLabel,
-                  placeholder: labels.comboboxPlaceholder,
-                  defaultOpen: true,
-                  defaultQuery: labels.comboboxNoMatchQuery,
-                  emptyLabel: labels.comboboxEmptyLabel,
-                  resultsLabel: labels.comboboxResultsLabel,
-                  options: {
-                    code: `[{ value: "fr", label: "${labels.comboboxOptionFrance}" }, { value: "de", label: "${labels.comboboxOptionGermany}" }, { value: "es", label: "${labels.comboboxOptionSpain}" }]`,
-                    value: [
-                      { value: "fr", label: labels.comboboxOptionFrance },
-                      { value: "de", label: labels.comboboxOptionGermany },
-                      { value: "es", label: labels.comboboxOptionSpain },
-                    ],
+              {
+                snippet: {
+                  component: "Combobox",
+                  props: {
+                    label: labels.comboboxLabel,
+                    placeholder: labels.comboboxPlaceholder,
+                    defaultOpen: true,
+                    defaultQuery: labels.comboboxNoMatchQuery,
+                    emptyLabel: labels.comboboxEmptyLabel,
+                    resultsLabel: labels.comboboxResultsLabel,
+                    options: {
+                      code: `[{ value: "fr", label: "${labels.comboboxOptionFrance}" }, { value: "de", label: "${labels.comboboxOptionGermany}" }, { value: "es", label: "${labels.comboboxOptionSpain}" }]`,
+                      value: [
+                        { value: "fr", label: labels.comboboxOptionFrance },
+                        { value: "de", label: labels.comboboxOptionGermany },
+                        { value: "es", label: labels.comboboxOptionSpain },
+                      ],
+                    },
                   },
                 },
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </div>
       </PrimitiveGroup>
 
       <PrimitiveGroup name="LocaleMenu / LocaleSwitcher">
@@ -594,6 +713,43 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
       </PrimitiveGroup>
     </div>
   )
+}
+
+/**
+ * s15-gallery-feedback (annotation mtit5cqcr4q) — Card's realistic example
+ * body: a kicker, a title, a line of body copy (compare StatCard, which
+ * already reads instantly for the same reason). `Title`/`Text`/
+ * `SectionLabel` set their own `text-*` token classes rather than
+ * inheriting `Card`'s colour, so on `Card`'s dark (`pine`) variant they
+ * need an explicit override — `text-paper`, the exact class card.tsx's own
+ * `pine` variant already declares (`variants.pine` in card.tsx), not a new
+ * token. No new component: composes the same three primitives every other
+ * variant uses.
+ */
+function cardExampleChildren(
+  kicker: string,
+  onDark: boolean,
+  labels: PrimitivesLabels,
+): Snippet[] {
+  return [
+    {
+      component: "SectionLabel",
+      props: onDark ? { className: "text-paper/70" } : {},
+      children: kicker,
+    },
+    {
+      component: "Title",
+      props: onDark ? { as: "h4", className: "text-paper" } : { as: "h4" },
+      children: labels.cardExampleTitle,
+    },
+    {
+      component: "Text",
+      props: onDark
+        ? { size: "xs", className: "text-paper/70" }
+        : { size: "xs" },
+      children: labels.cardExampleBody,
+    },
+  ]
 }
 
 function PrimitiveGroup({
@@ -620,15 +776,32 @@ function ExampleGrid({
 }) {
   return (
     <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map(({ snippet, render, previewClassName }, i) => (
-        <Example
-          key={i}
-          snippet={snippet}
-          labels={labels}
-          render={render}
-          previewClassName={previewClassName}
-        />
-      ))}
+      {items.map((item, i) => {
+        if ("items" in item) {
+          return (
+            <GroupedExample
+              key={i}
+              items={item.items}
+              labels={labels}
+              previewClassName={item.previewClassName}
+            />
+          )
+        }
+        // Destructured to `render` so the JSX below reads `render={render}`
+        // — the literal forwarding shape escape-hatch.test.ts's negative
+        // lookahead already exempts (it forwards an already-resolved value
+        // under the same name; not a new escape hatch).
+        const { snippet, render, previewClassName } = item
+        return (
+          <Example
+            key={i}
+            snippet={snippet}
+            labels={labels}
+            render={render}
+            previewClassName={previewClassName}
+          />
+        )
+      })}
     </div>
   )
 }

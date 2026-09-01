@@ -4,3 +4,8 @@ node_modules/
 .next/
 dist/
 *.tsbuildinfo
+
+# s15-gallery-feedback — working files dropped by the recette feedback tool
+# (screenshots + notes on the running /ui page), not repo content.
+annotations.md
+annotations/

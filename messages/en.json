@@ -205,6 +205,25 @@
     "blockStatRowName": "Stat row",
     "blockStatLabel1": "Active users",
     "blockStatLabel2": "Conversion rate",
-    "blockStatLabel3": "Monthly revenue"
+    "blockStatLabel3": "Monthly revenue",
+    "chartSeriesVisits": "Visits",
+    "chartCategoryJan": "Jan",
+    "chartCategoryFeb": "Feb",
+    "chartCategoryMar": "Mar",
+    "chartBarSeriesSignups": "Signups",
+    "chartBarCategoryQ1": "Q1",
+    "chartBarCategoryQ2": "Q2",
+    "chartBarCategoryQ3": "Q3",
+    "chartDonutSliceFree": "Free",
+    "chartDonutSlicePro": "Pro",
+    "chartDonutSliceEnterprise": "Enterprise",
+    "comboboxLabel": "Country",
+    "comboboxPlaceholder": "Search a country…",
+    "comboboxEmptyLabel": "No results",
+    "comboboxResultsLabel": "{count} results",
+    "comboboxOptionFrance": "France",
+    "comboboxOptionGermany": "Germany",
+    "comboboxOptionSpain": "Spain",
+    "comboboxNoMatchQuery": "xyz"
   }
 }

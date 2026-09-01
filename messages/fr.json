@@ -205,6 +205,25 @@
     "blockStatRowName": "Ligne de statistiques",
     "blockStatLabel1": "Utilisateurs actifs",
     "blockStatLabel2": "Taux de conversion",
-    "blockStatLabel3": "Revenu mensuel"
+    "blockStatLabel3": "Revenu mensuel",
+    "chartSeriesVisits": "Visites",
+    "chartCategoryJan": "Janv.",
+    "chartCategoryFeb": "Févr.",
+    "chartCategoryMar": "Mars",
+    "chartBarSeriesSignups": "Inscriptions",
+    "chartBarCategoryQ1": "T1",
+    "chartBarCategoryQ2": "T2",
+    "chartBarCategoryQ3": "T3",
+    "chartDonutSliceFree": "Gratuit",
+    "chartDonutSlicePro": "Pro",
+    "chartDonutSliceEnterprise": "Entreprise",
+    "comboboxLabel": "Pays",
+    "comboboxPlaceholder": "Rechercher un pays…",
+    "comboboxEmptyLabel": "Aucun résultat",
+    "comboboxResultsLabel": "{count} résultats",
+    "comboboxOptionFrance": "France",
+    "comboboxOptionGermany": "Allemagne",
+    "comboboxOptionSpain": "Espagne",
+    "comboboxNoMatchQuery": "xyz"
   }
 }

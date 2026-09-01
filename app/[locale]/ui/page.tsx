@@ -70,6 +70,28 @@ export default async function UiGalleryPage({
                 selectOptionALabel: t("selectOptionALabel"),
                 selectOptionBLabel: t("selectOptionBLabel"),
                 statLabelExample: t("statLabelExample"),
+                chartSeriesVisits: t("chartSeriesVisits"),
+                chartCategoryJan: t("chartCategoryJan"),
+                chartCategoryFeb: t("chartCategoryFeb"),
+                chartCategoryMar: t("chartCategoryMar"),
+                chartBarSeriesSignups: t("chartBarSeriesSignups"),
+                chartBarCategoryQ1: t("chartBarCategoryQ1"),
+                chartBarCategoryQ2: t("chartBarCategoryQ2"),
+                chartBarCategoryQ3: t("chartBarCategoryQ3"),
+                chartDonutSliceFree: t("chartDonutSliceFree"),
+                chartDonutSlicePro: t("chartDonutSlicePro"),
+                chartDonutSliceEnterprise: t("chartDonutSliceEnterprise"),
+                comboboxLabel: t("comboboxLabel"),
+                comboboxPlaceholder: t("comboboxPlaceholder"),
+                comboboxEmptyLabel: t("comboboxEmptyLabel"),
+                // t.raw(), not t(): the "{count}" placeholder is
+                // interpolated inside Combobox itself (see its doc
+                // comment), same convention as modalTriggerTemplate above.
+                comboboxResultsLabel: t.raw("comboboxResultsLabel"),
+                comboboxOptionFrance: t("comboboxOptionFrance"),
+                comboboxOptionGermany: t("comboboxOptionGermany"),
+                comboboxOptionSpain: t("comboboxOptionSpain"),
+                comboboxNoMatchQuery: t("comboboxNoMatchQuery"),
                 codeShow: t("codeShow"),
                 codeHide: t("codeHide"),
                 // t.raw(), not t(): the "{size}" placeholder is interpolated

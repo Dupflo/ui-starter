@@ -272,10 +272,11 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
         ],
       },
     },
-    // Utilisateurs — DataTable + Badge + Button, a COMPOSITION (T7,
-    // s17-data-table), not a second table component. Avatar (plain tokens,
-    // no new primitive), name, role, status, actions. The snippet below is
-    // the real `DataTable` call a consumer would write — `columns`/`rows`
+    // Utilisateurs — DataTable + Avatar + Badge + Button, a COMPOSITION
+    // (T7, s17-data-table; avatar column updated by T5, s18-ui-kit-polish),
+    // not a second table component: avatar, name, role, status, actions.
+    // The snippet below is the real `DataTable` call a consumer would
+    // write — `columns`/`rows`
     // use the same `{ code, value }` override as TextField's `registration`
     // (snippet.ts): `code` is what's displayed, `value` is an inert
     // placeholder never actually rendered (render bypasses renderSnippet
@@ -289,7 +290,8 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
           caption: labels.usersLabels.caption,
           columns: {
             code: `[
-  { key: "name", header: "${labels.usersLabels.columnUser}", sortable: true, cell: (row) => /* … */ row.name },
+  { key: "avatarSrc", header: "${labels.usersLabels.columnAvatar}", cell: (row) => <Avatar src={row.avatarSrc} name={row.name} decorative /> },
+  { key: "name", header: "${labels.usersLabels.columnUser}", sortable: true },
   { key: "role", header: "${labels.usersLabels.columnRole}", sortable: true },
   { key: "statusLabel", header: "${labels.usersLabels.columnStatus}", sortable: true, cell: (row) => <Badge tone={row.statusTone}>{row.statusLabel}</Badge> },
   { key: "id", header: "${labels.usersLabels.columnActions}", align: "end", cell: () => <Button size="sm" variant="subtle">${labels.usersLabels.actionView}</Button> },

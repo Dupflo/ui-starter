@@ -115,6 +115,9 @@ export default async function UiGalleryPage({
                 dataTableColumnName: t("dataTableColumnName"),
                 dataTableColumnEmail: t("dataTableColumnEmail"),
                 dataTableColumnRole: t("dataTableColumnRole"),
+                dataTableColumnSignups: t("dataTableColumnSignups"),
+                dataTableColumnJoined: t("dataTableColumnJoined"),
+                dataTableColumnPlan: t("dataTableColumnPlan"),
                 dataTableLoadingLabel: t("dataTableLoadingLabel"),
                 dataTableEmptyLabel: t("dataTableEmptyLabel"),
                 dataTablePreviousLabel: t("dataTablePreviousLabel"),
@@ -126,15 +129,19 @@ export default async function UiGalleryPage({
                 dataTableRow1Name: t("dataTableRow1Name"),
                 dataTableRow1Email: t("dataTableRow1Email"),
                 dataTableRow1Role: t("dataTableRow1Role"),
+                dataTableRow1Plan: t("dataTableRow1Plan"),
                 dataTableRow2Name: t("dataTableRow2Name"),
                 dataTableRow2Email: t("dataTableRow2Email"),
                 dataTableRow2Role: t("dataTableRow2Role"),
+                dataTableRow2Plan: t("dataTableRow2Plan"),
                 dataTableRow3Name: t("dataTableRow3Name"),
                 dataTableRow3Email: t("dataTableRow3Email"),
                 dataTableRow3Role: t("dataTableRow3Role"),
+                dataTableRow3Plan: t("dataTableRow3Plan"),
                 dataTableRow4Name: t("dataTableRow4Name"),
                 dataTableRow4Email: t("dataTableRow4Email"),
                 dataTableRow4Role: t("dataTableRow4Role"),
+                dataTableRow4Plan: t("dataTableRow4Plan"),
               }}
             />
 
@@ -173,6 +180,7 @@ export default async function UiGalleryPage({
                 usersName: t("blockUsersName"),
                 usersLabels: {
                   caption: t("usersCaption"),
+                  columnAvatar: t("usersColumnAvatar"),
                   columnUser: t("usersColumnUser"),
                   columnRole: t("usersColumnRole"),
                   columnStatus: t("usersColumnStatus"),

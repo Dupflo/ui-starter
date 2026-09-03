@@ -36,6 +36,15 @@
  *   2. components/auth/google-button.tsx — SVG fill colours (#4285F4, #34A853,
  *      #FBBC05, #EA4335)
  *      Reason: Google's fixed brand colours per brand guidelines; not themeable.
+ *   3. components/gallery/avatar-fixtures.ts — TOKEN_HEX (#1f8a4c, #c9810a,
+ *      #f9f9fb)
+ *      Reason: literal copies of app/globals.css's @theme colour tokens, used to
+ *      build inline SVG data-URI demo avatars (s18-ui-kit-polish). A data-URI
+ *      SVG rendered inside an <img> is an isolated document with no access to
+ *      the parent page's CSS custom properties, so var(--color-…) cannot be
+ *      used there — literal hex is the only option. Cross-checked against
+ *      app/globals.css by avatar-fixtures.test.ts, so a token value changing
+ *      there cannot silently drift here.
  *
  * To add a new site: add the sentinel to the exact line, extend this list, and
  * get a review sign-off — do NOT add path-glob wildcards.

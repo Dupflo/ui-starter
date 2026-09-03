@@ -271,6 +271,12 @@ const GALLERY_KEYS = [
   "dataTableColumnName",
   "dataTableColumnEmail",
   "dataTableColumnRole",
+  // s18-ui-kit-polish T5 — number/date/status columns added so the demo's
+  // horizontal scroll and multi-type sort actually show (annotation
+  // `mtlqxys25i7`).
+  "dataTableColumnSignups",
+  "dataTableColumnJoined",
+  "dataTableColumnPlan",
   "dataTableLoadingLabel",
   "dataTableEmptyLabel",
   "dataTablePreviousLabel",
@@ -279,19 +285,26 @@ const GALLERY_KEYS = [
   "dataTableRow1Name",
   "dataTableRow1Email",
   "dataTableRow1Role",
+  "dataTableRow1Plan",
   "dataTableRow2Name",
   "dataTableRow2Email",
   "dataTableRow2Role",
+  "dataTableRow2Plan",
   "dataTableRow3Name",
   "dataTableRow3Email",
   "dataTableRow3Role",
+  "dataTableRow3Plan",
   "dataTableRow4Name",
   "dataTableRow4Email",
   "dataTableRow4Role",
+  "dataTableRow4Plan",
   // s17-data-table T7 — "Utilisateurs" composition block
   // (components/gallery/data-table-users-demo.tsx, blocks-section.tsx)
   "blockUsersName",
   "usersCaption",
+  // s18-ui-kit-polish T5 — dedicated avatar column, real images (annotation
+  // `mtlqxys25i7`).
+  "usersColumnAvatar",
   "usersColumnUser",
   "usersColumnRole",
   "usersColumnStatus",

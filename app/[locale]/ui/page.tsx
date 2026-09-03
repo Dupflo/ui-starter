@@ -142,6 +142,10 @@ export default async function UiGalleryPage({
                 dataTableRow4Email: t("dataTableRow4Email"),
                 dataTableRow4Role: t("dataTableRow4Role"),
                 dataTableRow4Plan: t("dataTableRow4Plan"),
+                actionMenuLabel: t("actionMenuLabel"),
+                actionMenuEdit: t("actionMenuEdit"),
+                actionMenuArchive: t("actionMenuArchive"),
+                actionMenuDelete: t("actionMenuDelete"),
               }}
             />
 
@@ -186,6 +190,12 @@ export default async function UiGalleryPage({
                   columnStatus: t("usersColumnStatus"),
                   columnActions: t("usersColumnActions"),
                   actionView: t("usersActionView"),
+                  actionEdit: t("usersActionEdit"),
+                  actionDelete: t("usersActionDelete"),
+                  // t.raw(), not t(): the "{name}" placeholder is
+                  // interpolated per row inside DataTableUsersDemo itself
+                  // (same convention as dataTablePageOfTemplate above).
+                  actionsLabelTemplate: t.raw("usersActionsLabelTemplate"),
                   row1Name: t("usersRow1Name"),
                   row1Role: t("usersRow1Role"),
                   row1Status: t("usersRow1Status"),

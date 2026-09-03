@@ -1,8 +1,8 @@
 "use client"
 
+import { ActionMenu } from "@/components/ui/action-menu"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { DataTable, type Column } from "@/components/ui/data-table"
 import { AVATAR_DEMO_IMAGES } from "@/components/gallery/avatar-fixtures"
 
@@ -26,6 +26,17 @@ export type DataTableUsersLabels = {
   columnStatus: string
   columnActions: string
   actionView: string
+  // T5 (s19-action-menu, annotation `mtlqyltsxz8`) — replaces the lone
+  // "Voir" Button with an ActionMenu.
+  actionEdit: string
+  actionDelete: string
+  /** RAW i18n template with a literal "{name}" placeholder, interpolated
+   *  per row below — same convention as DataTable's own `pageOfTemplate`
+   *  and Combobox's `resultsLabel`. A per-row name (not the same generic
+   *  "Actions" repeated on every row) is a real accessibility improvement:
+   *  several identically-named triggers on one page are only "correct",
+   *  never ideal — see action-menu.tsx's own doc comment. */
+  actionsLabelTemplate: string
   row1Name: string
   row1Role: string
   row1Status: string
@@ -47,14 +58,23 @@ export type DataTableUsersLabels = {
 
 /**
  * T7 (s17-data-table), avatar column updated by T5 (s18-ui-kit-polish,
- * annotation `mtlqxys25i7`) — the "Utilisateurs" block: a COMPOSITION on
+ * annotation `mtlqxys25i7`), row action updated by T5 (s19-action-menu,
+ * annotation `mtlqyltsxz8`) — the "Utilisateurs" block: a COMPOSITION on
  * `DataTable`, not a second table component (docs/stories.md AC). `Column`
  * `cell` is where that composition happens — a dedicated `Avatar` column
  * (image on two rows, initials fallback on the other two — see `UserRow`'s
- * doc comment), a `Badge` for status, and a real `Button` for the row
- * action. `components/ui/data-table.tsx` itself never imports Badge/Avatar/
- * Button (data-table.test.ts's source-level check) — this file is where
- * those imports actually live.
+ * doc comment), a `Badge` for status, and an `ActionMenu` (view / edit /
+ * delete) for the row action, replacing the lone "Voir" `Button`.
+ * `components/ui/data-table.tsx` itself never imports Badge/Avatar/
+ * ActionMenu (data-table.test.ts's source-level check) — this file is
+ * where those imports actually live.
+ *
+ * The edit action is disabled for the one "danger"-status row (a suspended
+ * account) — a real instance of the story's disabled-state AC, not just
+ * the primitives-section demo's inert one. `onSelect` is otherwise left
+ * unwired on every action here, same as the "Voir" Button it replaces had
+ * no `onClick`: this gallery composition has no real backend to act
+ * against — wiring real navigation is a screen's job, not a demo's.
  *
  * The avatar is `decorative`: the row's name is already visible, as text,
  * in its own "Utilisateur" column on the SAME row — without `decorative` a
@@ -136,10 +156,19 @@ export function DataTableUsersDemo({
       key: "id",
       header: labels.columnActions,
       align: "end",
-      cell: () => (
-        <Button size="sm" variant="subtle">
-          {labels.actionView}
-        </Button>
+      cell: (row) => (
+        <ActionMenu
+          label={labels.actionsLabelTemplate.replace("{name}", row.name)}
+          items={[
+            { key: "view", label: labels.actionView },
+            {
+              key: "edit",
+              label: labels.actionEdit,
+              disabled: row.statusTone === "danger",
+            },
+            { key: "delete", label: labels.actionDelete, destructive: true },
+          ]}
+        />
       ),
     },
   ]

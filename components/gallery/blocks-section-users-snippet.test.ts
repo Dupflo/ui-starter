@@ -32,10 +32,13 @@ function usersBlockSource(): string {
   const start = source.indexOf("// Utilisateurs")
   expect(start, "expected the Utilisateurs block comment").toBeGreaterThan(-1)
   // The block runs to the end of the array literal (the file's closing
-  // `] as const satisfies ...` or similar) — slicing 2000 chars from the
-  // start comfortably covers the whole snippet object without depending on
-  // exact downstream content.
-  return source.slice(start, start + 2000)
+  // `] as const satisfies ...` or similar) — slicing from the start
+  // comfortably covers the whole snippet object without depending on exact
+  // downstream content. Bumped 2000 → 2400 (fix mode, s19-action-menu,
+  // MINOR 2): deriving the ActionMenu label from `actionsLabelTemplate`
+  // instead of a hardcoded literal lengthened the `columns` line enough to
+  // push the trailing `rows.code` match past the old 2000-char window.
+  return source.slice(start, start + 2400)
 }
 
 describe("gallery — Utilisateurs block's columns snippet accurately shows the real Avatar cell (s17-data-table, updated s18-ui-kit-polish T5)", () => {
@@ -59,5 +62,54 @@ describe("gallery — Utilisateurs block's columns snippet accurately shows the 
     const rowsCodeMatch = block.match(/rows:\s*{\s*code:\s*`([\s\S]*?)`,/)
     expect(rowsCodeMatch, "expected a rows.code template string").not.toBeNull()
     expect(rowsCodeMatch![1]).toMatch(/\/\* … \*\//)
+  })
+})
+
+// s19-action-menu (T5, annotation `mtlqyltsxz8`) — same theme as the
+// Avatar guard above: the "Utilisateurs" block's row action moved from a
+// lone "Voir" `Button` to an `ActionMenu` (view/edit/delete) in
+// data-table-users-demo.tsx. A copyable snippet still showing the old
+// `<Button>` cell would be exactly the "copy-pastable truth" defect this
+// file exists to prevent, just for a different cell.
+describe("gallery — Utilisateurs block's columns snippet accurately shows the real ActionMenu action cell (s19-action-menu T5)", () => {
+  it("references <ActionMenu> in the copyable columns code, not the old Button", () => {
+    const block = usersBlockSource()
+    const columnsCodeMatch = block.match(/columns:\s*{\s*code:\s*`([\s\S]*?)`,/)
+    expect(
+      columnsCodeMatch,
+      "expected a columns.code template string",
+    ).not.toBeNull()
+    expect(columnsCodeMatch![1]).toMatch(/<ActionMenu\b/)
+    expect(columnsCodeMatch![1]).not.toMatch(/<Button\b/)
+  })
+
+  it("shows the destructive delete action in the copyable code", () => {
+    const block = usersBlockSource()
+    const columnsCodeMatch = block.match(/columns:\s*{\s*code:\s*`([\s\S]*?)`,/)
+    expect(columnsCodeMatch![1]).toMatch(/destructive:\s*true/)
+  })
+})
+
+// Fix mode (review, MINOR 2) — the copyable code showed a HARDCODED English
+// literal (`label={\`Actions for \${row.name}\`}`) while every other string
+// on this same line is interpolated from `labels.usersLabels`, and while
+// data-table-users-demo.tsx's REAL cell derives the label from
+// `labels.actionsLabelTemplate.replace("{name}", row.name)` — served on
+// `/fr/ui`, the copyable snippet showed English right next to
+// "Voir"/"Modifier"/"Supprimer", and drifted from the real cell it claims
+// to document.
+describe("gallery — Utilisateurs block's ActionMenu label matches the real i18n template, not a hardcoded English string (s19-action-menu fix mode, MINOR 2)", () => {
+  it('derives the copyable label from usersActionsLabelTemplate (fr: "Actions pour {name}", en: "Actions for {name}"), never a literal "Actions for"', () => {
+    const block = usersBlockSource()
+    const columnsCodeMatch = block.match(/columns:\s*{\s*code:\s*`([\s\S]*?)`,/)
+    expect(
+      columnsCodeMatch,
+      "expected a columns.code template string",
+    ).not.toBeNull()
+    expect(columnsCodeMatch![1]).not.toMatch(/Actions for/)
+    expect(columnsCodeMatch![1]).toMatch(/actionsLabelTemplate/)
+    expect(columnsCodeMatch![1]).toMatch(
+      /\.replace\(\s*"\{name\}"\s*,\s*row\.name\s*\)/,
+    )
   })
 })

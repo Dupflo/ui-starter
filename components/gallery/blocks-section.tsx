@@ -294,7 +294,7 @@ export function BlocksSection({ labels }: { labels: BlocksLabels }) {
   { key: "name", header: "${labels.usersLabels.columnUser}", sortable: true },
   { key: "role", header: "${labels.usersLabels.columnRole}", sortable: true },
   { key: "statusLabel", header: "${labels.usersLabels.columnStatus}", sortable: true, cell: (row) => <Badge tone={row.statusTone}>{row.statusLabel}</Badge> },
-  { key: "id", header: "${labels.usersLabels.columnActions}", align: "end", cell: () => <Button size="sm" variant="subtle">${labels.usersLabels.actionView}</Button> },
+  { key: "id", header: "${labels.usersLabels.columnActions}", align: "end", cell: (row) => <ActionMenu label={\`${labels.usersLabels.actionsLabelTemplate}\`.replace("{name}", row.name)} items={[{ key: "view", label: "${labels.usersLabels.actionView}" }, { key: "edit", label: "${labels.usersLabels.actionEdit}", disabled: row.statusTone === "danger" }, { key: "delete", label: "${labels.usersLabels.actionDelete}", destructive: true }]} /> },
 ]`,
             value: [],
           },

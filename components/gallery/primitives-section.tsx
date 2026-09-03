@@ -201,6 +201,17 @@ export type PrimitivesLabels = ExampleLabels & {
   dataTableRow4Email: string
   dataTableRow4Role: string
   dataTableRow4Plan: string
+  // T6 (s19-action-menu) — ActionMenu primitive demo. `onSelect` is
+  // deliberately never wired here: `primitives-section.tsx` is a Server
+  // Component (see this file's PrimitivesSection doc comment), and a real
+  // handler is a function — the exact Server→Client boundary trap T5 hits
+  // for DataTableUsersDemo's `cell` closures (same root cause as s17's
+  // `rowKey`). The wired, clickable version lives in the "Utilisateurs"
+  // composition below, already a "use client" module.
+  actionMenuLabel: string
+  actionMenuEdit: string
+  actionMenuArchive: string
+  actionMenuDelete: string
 }
 
 /**
@@ -940,6 +951,41 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
             },
           }}
           previewClassName="w-full"
+        />
+      </PrimitiveGroup>
+
+      <PrimitiveGroup name="ActionMenu">
+        {/* T2/T3/T4 (s19-action-menu) — closed by default (no `defaultOpen`
+            prop, unlike Combobox: T4 portals the open menu into
+            `document.body` to escape DataTable's `overflow-x-auto`, so
+            there is no served-HTML state to force open here — see
+            action-menu.tsx's own doc comment). Three items cover all three
+            states the AC asks for: a plain action, a disabled one, and a
+            destructive one. */}
+        <Example
+          labels={exampleLabels}
+          snippet={{
+            component: "ActionMenu",
+            props: {
+              label: labels.actionMenuLabel,
+              items: {
+                code: `[{ key: "edit", label: "${labels.actionMenuEdit}" }, { key: "archive", label: "${labels.actionMenuArchive}", disabled: true }, { key: "delete", label: "${labels.actionMenuDelete}", destructive: true }]`,
+                value: [
+                  { key: "edit", label: labels.actionMenuEdit },
+                  {
+                    key: "archive",
+                    label: labels.actionMenuArchive,
+                    disabled: true,
+                  },
+                  {
+                    key: "delete",
+                    label: labels.actionMenuDelete,
+                    destructive: true,
+                  },
+                ],
+              },
+            },
+          }}
         />
       </PrimitiveGroup>
 

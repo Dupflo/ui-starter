@@ -1,3 +1,4 @@
+import { ActionMenu } from "@/components/ui/action-menu"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,7 @@ import { Title } from "@/components/ui/title"
  * a component that no longer exists there fails it too (stale-entry check).
  */
 export const COMPONENTS = {
+  ActionMenu,
   Avatar,
   Badge,
   Button,

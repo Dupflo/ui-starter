@@ -11,29 +11,35 @@ import { describe, it, expect } from "vitest"
 //
 // What this pins is the story's own framing for the "Utilisateurs" block:
 // a COMPOSITION on DataTable (Badge for status, a real Button for the row
-// action, an avatar built from plain tokens — no Avatar primitive exists in
-// the design system, and none is invented here), never a second table
-// component, and never something `components/ui/data-table.tsx` itself
-// knows about (see data-table.test.ts's "imports no components/ui
-// primitive of its own" check for the other half of this guarantee).
+// action, `Avatar` for the row's photo — see below — never something
+// `components/ui/data-table.tsx` itself knows about (data-table.test.ts's
+// "imports no components/ui primitive of its own" check is the other half
+// of that guarantee), and never a second table component.
+//
+// SUPERSEDES s17's "no Avatar primitive exists, none invented here" —
+// s18-ui-kit-polish (annotation `mtlqxys25i7`, "ajoute … une colonne
+// avatar avec des images") introduced `components/ui/avatar.tsx`; this
+// block is updated to use the real primitive instead of the plain-tokens
+// initials span it composed by hand before one existed.
 
 const source = readFileSync(
   fileURLToPath(new URL("./data-table-users-demo.tsx", import.meta.url)),
   "utf8",
 )
 
-describe("DataTableUsersDemo — a composition, not a second component (T7)", () => {
+describe("DataTableUsersDemo — a composition, not a second component (T7/s17, updated T5/s18)", () => {
   it('is a Client Component ("use client")', () => {
     expect(source.trimStart()).toMatch(/^"use client"/)
   })
 
-  it("composes DataTable, Badge and Button — the composition, not DataTable, owns these imports", () => {
+  it("composes DataTable, Badge, Button and Avatar — the composition, not DataTable, owns these imports", () => {
     expect(source).toMatch(/from ["']@\/components\/ui\/data-table["']/)
     expect(source).toMatch(/from ["']@\/components\/ui\/badge["']/)
     expect(source).toMatch(/from ["']@\/components\/ui\/button["']/)
+    expect(source).toMatch(/from ["']@\/components\/ui\/avatar["']/)
   })
 
-  it("supplies exactly 3 custom `cell` renderers (user/avatar, status badge, actions) — a column dropping its override silently is the regression this pins", () => {
+  it("supplies exactly 3 custom `cell` renderers (avatar, status badge, actions) — name/role fall back to the default text render; a column dropping its override silently is the regression this pins", () => {
     const cellOccurrences = source.match(/\bcell:\s*\(/g) ?? []
     expect(cellOccurrences).toHaveLength(3)
   })
@@ -46,9 +52,17 @@ describe("DataTableUsersDemo — a composition, not a second component (T7)", ()
     expect(source).toMatch(/<Button\b/)
   })
 
-  it("does not invent an Avatar component — the avatar is plain tokens (rounded-full), same precedent as the pricing block's spacing div in blocks-section.tsx", () => {
-    expect(source).not.toMatch(/from ["']@\/components\/ui\/avatar["']/)
-    expect(source).not.toMatch(/<Avatar\b/)
-    expect(source).toMatch(/rounded-full/)
+  it("renders the dedicated avatar column through the real Avatar primitive, with a real image src on at least one row", () => {
+    expect(source).toMatch(/<Avatar\b/)
+    expect(source).toMatch(/avatarSrc/)
+  })
+
+  it("the avatar is decorative — a visible name already sits in its own column on the same row, so a screen reader must not hear it twice", () => {
+    const avatarCellMatch = source.match(/<Avatar\b[^/]*\/>/)
+    expect(
+      avatarCellMatch,
+      "expected a self-closing <Avatar … /> usage",
+    ).not.toBeNull()
+    expect(avatarCellMatch![0]).toMatch(/\bdecorative\b/)
   })
 })

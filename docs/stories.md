@@ -526,3 +526,72 @@ s12 (galerie), s15, s16. Décision humaine du 01/09/2026 sur le périmètre : tr
 - **Trap** : `<table>` a des contraintes d'accessibilité propres — `scope` sur les en-têtes, `aria-sort` sur la colonne triée, et un `<caption>` ou un `aria-label`. Une table sans nom accessible est un défaut (cf. le combobox de s14, qui tirait son nom du placeholder).
 - **Trap** : ce repo ne peut pas tester l'interaction réelle sous Vitest (pas de jsdom, `components/ui/*` non importable). Le tri et la pagination au clavier se vérifient en pilotant un navigateur, comme s14 et s15 l'ont fait, puis se listent en « non vérifié » si ce n'est pas possible.
 - **Risk** : la tentation de couvrir tous les cas. Le périmètre est arrêté ; un besoin au-delà est une story ultérieure, pas une extension silencieuse.
+
+---
+
+## Story s18-ui-kit-polish — UI Kit : renommage, exemples utiles, table enrichie
+
+**As a** builder **I want** que la galerie s'appelle par son nom et que ses exemples m'apprennent quelque chose, **so that** je n'y perde pas de temps sur des démonstrations qui ne montrent rien.
+
+### Complexity
+
+3
+
+### Acceptance criteria
+
+- [ ] **Renommage** : l'entrée de navigation « Galerie de composants » devient **« UI Kit »** (fr et en). Vérifier qu'aucun autre libellé ne reste désynchronisé (titre de page, métadonnées, `docs/`).
+- [ ] **Exemples de `pad` (`Card`)** : aujourd'hui trois cartes empilées au contenu identique, où seule la respiration change — la différence est invisible et la répétition n'apprend rien. Rendre la comparaison **lisible** (mise côte à côte, ou toute présentation où l'écart de padding se voit d'un coup d'œil), ou retirer la démonstration et documenter `pad` dans le tableau de props. **Trancher explicitement et justifier.**
+- [ ] **`DataTable` : plus de colonnes.** La démo n'en montre que trois ; en ajouter assez pour que le défilement horizontal et le tri sur plusieurs types (texte, nombre, date, statut) se voient réellement.
+- [ ] **Colonne avatar** dans la démo utilisateurs, avec des images.
+- [ ] **Primitive `Avatar`** dans `components/ui/` : affiche l'image quand `src` est fourni, retombe sur les initiales sinon. **Décision humaine du 03/09/2026** : les images de démonstration sont des **SVG inline (data-URI) construits sur les tokens** — aucun fichier binaire ajouté à `public/`, qui part dans chaque fork alors que la galerie n'existe qu'en démo.
+- [ ] `Avatar` est enregistré dans la galerie ; le test d'atteignabilité le couvre **sans modification**.
+- [ ] Un nom accessible pour l'avatar (le nom de la personne), vérifié dans l'**arbre d'accessibilité** — pas par la présence d'un attribut. Une image décorative doit être `aria-hidden`, un avatar porteur d'information doit avoir un nom.
+- [ ] Strings i18n fr+en, zéro couleur brute, rendu correct en clair **et** en sombre.
+- [ ] `npm run test`, `test:build`, `lint:design`, `typecheck`, `build`, `lint` passent.
+
+### Dependencies
+
+s17-data-table.
+
+### Agentic notes
+
+- Origine : annotations visuelles du 03/09/2026 (`mtlqrtxmkid`, `mtlqwiur9l4`, `mtlqxys25i7`).
+- **Trap** : les data-URI SVG contiennent des couleurs. `check-design-tokens` ne parcourt que `app|components|lib` et ne verra pas une couleur en dur dans une chaîne encodée — construire les couleurs depuis les tokens, et le **vérifier sur le rendu**, pas sur le lint (même piège que les couleurs par défaut de Recharts en s14).
+- **Trap** : `next/image` refuse certaines sources ; un `<img>` simple peut suffire pour un avatar de 32 px. Décider et justifier.
+- **Trap** : le test d'atteignabilité et `escape-hatch.test.ts` (compteur à 6) s'appliquent.
+- **Risk** : la tentation d'élargir `Avatar` (badge de présence, groupes empilés). Périmètre : image ou initiales, rien de plus. Le reste est une story ultérieure.
+
+---
+
+## Story s19-action-menu — Menu d'actions
+
+**As a** builder **I want** un menu d'actions déclenché par un bouton discret, **so that** je propose plusieurs actions par ligne sans encombrer le tableau.
+
+### Complexity
+
+3
+
+### Acceptance criteria
+
+- [ ] **Primitive `ActionMenu`** (ou nom équivalent) dans `components/ui/` : un déclencheur discret ouvre une liste d'actions.
+- [ ] **Accessible** : le déclencheur porte un nom accessible réel, `aria-expanded`, `aria-haspopup` ; la liste a le rôle adéquat et ses éléments aussi ; navigation ↑ ↓ Début Fin, activation Entrée/Espace, fermeture par Échap **et** par clic extérieur, et le focus revient au déclencheur à la fermeture. Un menu utilisable seulement à la souris est un défaut, pas une limite.
+- [ ] Vérifié dans l'**arbre d'accessibilité** et en pilotant un navigateur, pas par la présence d'attributs.
+- [ ] Une action peut être marquée **destructive** (rendu distinct) et **désactivée**.
+- [ ] Intégré dans la colonne « Actions » de la démo `DataTable`, en remplacement du bouton « Voir » isolé.
+- [ ] Enregistré dans la galerie ; test d'atteignabilité **sans modification**.
+- [ ] Aucune dépendance ajoutée sans nouvel ADR.
+- [ ] Strings i18n fr+en, zéro couleur brute, clair **et** sombre.
+- [ ] Gates verts.
+
+### Dependencies
+
+s17-data-table, s18-ui-kit-polish.
+
+### Agentic notes
+
+- Origine : annotation visuelle du 03/09/2026 (`mtlqyltsxz8`) — « rajoute une barre d'outil ... vertical avec des actions ».
+- **`components/ui/locale-menu.tsx` est le précédent du repo** : `useState`, `aria-expanded`, `role="menu"`, fermeture au clic extérieur. Le lire avant d'écrire — mais ne pas le généraliser à la hache, il est couplé à la locale.
+- **Trap** : un menu dans une cellule de tableau doit se superposer sans être rogné par `overflow-x-auto` du conteneur de table (s17). Vérifier sur le rendu, c'est le piège classique.
+- **Trap** : les fonctions ne traversent pas la frontière Server→Client (défaut trouvé en s17 avec `rowKey`). Les gestionnaires d'action doivent être définis dans un module client.
+- **Trap** : `escape-hatch.test.ts` épingle le compteur ; le bumper délibérément si nécessaire.
+- **Risk** : sous-menus, raccourcis clavier affichés, groupes séparés — hors périmètre. Une liste d'actions plate suffit.

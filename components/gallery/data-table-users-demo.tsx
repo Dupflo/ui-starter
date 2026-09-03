@@ -1,8 +1,10 @@
 "use client"
 
+import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable, type Column } from "@/components/ui/data-table"
+import { AVATAR_DEMO_IMAGES } from "@/components/gallery/avatar-fixtures"
 
 type UserRow = {
   id: string
@@ -10,10 +12,15 @@ type UserRow = {
   role: string
   statusLabel: string
   statusTone: "success" | "warning" | "danger"
+  /** Absent on purpose for two of the four demo rows — `Avatar` falls back
+   *  to initials for those, so this one table demonstrates BOTH of the
+   *  primitive's two states, not just the one with an image. */
+  avatarSrc?: string
 }
 
 export type DataTableUsersLabels = {
   caption: string
+  columnAvatar: string
   columnUser: string
   columnRole: string
   columnStatus: string
@@ -38,25 +45,24 @@ export type DataTableUsersLabels = {
   pageOfTemplate: string
 }
 
-/** Initials for the avatar — first letter of each of the first two words. */
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("")
-}
-
 /**
- * T7 (s17-data-table) — the "Utilisateurs" block: a COMPOSITION on
+ * T7 (s17-data-table), avatar column updated by T5 (s18-ui-kit-polish,
+ * annotation `mtlqxys25i7`) — the "Utilisateurs" block: a COMPOSITION on
  * `DataTable`, not a second table component (docs/stories.md AC). `Column`
- * `cell` is where that composition actually happens — an avatar (plain
- * tokens: `rounded-full` + initials, no `Avatar` primitive exists in the
- * design system and none is invented here), a `Badge` for status, and a
- * real `Button` for the row action. `components/ui/data-table.tsx` itself
- * never imports Badge/Avatar/Button (data-table.test.ts's source-level
- * check) — this file is where those imports actually live.
+ * `cell` is where that composition happens — a dedicated `Avatar` column
+ * (image on two rows, initials fallback on the other two — see `UserRow`'s
+ * doc comment), a `Badge` for status, and a real `Button` for the row
+ * action. `components/ui/data-table.tsx` itself never imports Badge/Avatar/
+ * Button (data-table.test.ts's source-level check) — this file is where
+ * those imports actually live.
+ *
+ * The avatar is `decorative`: the row's name is already visible, as text,
+ * in its own "Utilisateur" column on the SAME row — without `decorative` a
+ * screen reader would announce the person's name twice per row. Contrast
+ * the standalone `Avatar` example in primitives-section.tsx, which has no
+ * adjacent visible name and therefore IS the informational case (a real
+ * accessible name, no `decorative`) — see avatar.tsx's own doc comment for
+ * the two states.
  *
  * ESCAPE HATCH boundary: `columns` below carries `cell` closures (plain
  * functions) — React/Next refuses a bare function prop passed from a
@@ -80,6 +86,7 @@ export function DataTableUsersDemo({
       role: labels.row1Role,
       statusLabel: labels.row1Status,
       statusTone: "success",
+      avatarSrc: AVATAR_DEMO_IMAGES.camille,
     },
     {
       id: "2",
@@ -87,6 +94,7 @@ export function DataTableUsersDemo({
       role: labels.row2Role,
       statusLabel: labels.row2Status,
       statusTone: "warning",
+      avatarSrc: AVATAR_DEMO_IMAGES.yanis,
     },
     {
       id: "3",
@@ -106,21 +114,14 @@ export function DataTableUsersDemo({
 
   const columns: Column<UserRow>[] = [
     {
-      key: "name",
-      header: labels.columnUser,
-      sortable: true,
-      cell: (row) => (
-        <div className="flex items-center gap-2.5">
-          <span
-            aria-hidden="true"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fill text-xs font-semibold text-ink"
-          >
-            {initials(row.name)}
-          </span>
-          <span className="font-medium text-ink">{row.name}</span>
-        </div>
-      ),
+      // No natural sort/display value of its own — `key` still has to name
+      // a real Row field to satisfy Column<Row> (T1), so this reuses
+      // `avatarSrc`; `cell` is what actually renders here.
+      key: "avatarSrc",
+      header: labels.columnAvatar,
+      cell: (row) => <Avatar src={row.avatarSrc} name={row.name} decorative />,
     },
+    { key: "name", header: labels.columnUser, sortable: true },
     { key: "role", header: labels.columnRole, sortable: true },
     {
       key: "statusLabel",

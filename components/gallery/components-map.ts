@@ -1,3 +1,4 @@
+import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, StatCard } from "@/components/ui/card"
@@ -26,6 +27,7 @@ import { Title } from "@/components/ui/title"
  * a component that no longer exists there fails it too (stale-entry check).
  */
 export const COMPONENTS = {
+  Avatar,
   Badge,
   Button,
   Card,

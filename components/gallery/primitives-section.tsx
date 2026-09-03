@@ -1,13 +1,11 @@
 import type { ReactNode } from "react"
+import { sizes as avatarSizes } from "@/components/ui/avatar"
 import {
   variants as buttonVariants,
   sizes as buttonSizes,
 } from "@/components/ui/button"
 import { tones as badgeTones, sizes as badgeSizes } from "@/components/ui/badge"
-import {
-  variants as cardVariants,
-  pads as cardPads,
-} from "@/components/ui/card"
+import { variants as cardVariants } from "@/components/ui/card"
 import { Title, looks as titleLooks } from "@/components/ui/title"
 import {
   Text,
@@ -24,7 +22,9 @@ import { ModalDemo } from "@/components/gallery/modal-demo"
 import { LightboxDemo } from "@/components/gallery/lightbox-demo"
 import { TextFieldDemo } from "@/components/gallery/text-field-demo"
 import { surfacePatch, textToken } from "@/components/gallery/surface-contrast"
+import { AVATAR_DEMO_IMAGES } from "@/components/gallery/avatar-fixtures"
 import type { Snippet } from "@/components/gallery/snippet"
+import type { Column } from "@/components/ui/data-table"
 
 /** One `GroupedExample` item: a live render (from the snippet, or an escape
  *  hatch) plus the snippet `codeOf` reads for the shared code block.
@@ -75,6 +75,31 @@ const BUTTON_ICON_SIZE_EXAMPLE: Snippet = {
 type GridItem =
   | { snippet: Snippet; render?: ReactNode; previewClassName?: string }
   | { items: GroupItem[]; previewClassName?: string }
+
+/**
+ * Row shape for the primitives-section DataTable demo — exists only so the
+ * `columns` literal below can be checked with
+ * `satisfies Column<DataTableDemoRow>[]`. Without it, a `key` typo there
+ * passes `tsc` cleanly: `Snippet["props"]`'s object form is
+ * `{ value: unknown }` (components/gallery/snippet.ts) — a single
+ * string-indexed prop registry serving every heterogeneous gallery
+ * component genuinely can't be generic per component (see snippet.ts's own
+ * doc comment) — so nothing downstream of that assignment can catch it.
+ * `satisfies` checks the literal in place, at its real call site, without
+ * moving it or changing what gets rendered: same object, tsc looks at it
+ * once before it is handed to the untyped registry. Verified manually (a
+ * deliberate `key` typo made `npm run typecheck` fail; removed — see the
+ * story report).
+ */
+type DataTableDemoRow = {
+  id: string
+  name: string
+  email: string
+  role: string
+  signups: number
+  joinedDate: string
+  plan: string
+}
 
 export type PrimitivesLabels = ExampleLabels & {
   disabledLabel: string
@@ -147,6 +172,11 @@ export type PrimitivesLabels = ExampleLabels & {
   dataTableColumnName: string
   dataTableColumnEmail: string
   dataTableColumnRole: string
+  // T5 (s18-ui-kit-polish) — number/date/status columns, enough for the
+  // demo's horizontal scroll and multi-type sort to actually show.
+  dataTableColumnSignups: string
+  dataTableColumnJoined: string
+  dataTableColumnPlan: string
   dataTableLoadingLabel: string
   dataTableEmptyLabel: string
   dataTablePreviousLabel: string
@@ -158,15 +188,19 @@ export type PrimitivesLabels = ExampleLabels & {
   dataTableRow1Name: string
   dataTableRow1Email: string
   dataTableRow1Role: string
+  dataTableRow1Plan: string
   dataTableRow2Name: string
   dataTableRow2Email: string
   dataTableRow2Role: string
+  dataTableRow2Plan: string
   dataTableRow3Name: string
   dataTableRow3Email: string
   dataTableRow3Role: string
+  dataTableRow3Plan: string
   dataTableRow4Name: string
   dataTableRow4Email: string
   dataTableRow4Role: string
+  dataTableRow4Plan: string
 }
 
 /**
@@ -280,6 +314,53 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
         </div>
       </PrimitiveGroup>
 
+      <PrimitiveGroup name="Avatar">
+        <div className="mt-4">
+          <GroupedExample
+            labels={exampleLabels}
+            items={[
+              // Size scale, derived from `sizes` (avatar.tsx) — same
+              // convention as every other size table in this file. Real
+              // `src` (T4's token-built data-URI, components/gallery/
+              // avatar-fixtures.ts) so the rendered colours are the actual
+              // token colours, not a placeholder — the `{ code, value }`
+              // override only shortens what the COPYABLE code shows (the
+              // full data-URI is ~300 characters, unreadable inline); the
+              // live preview always uses the real `value`.
+              ...Object.keys(avatarSizes).map(
+                (size): GroupItem => ({
+                  snippet: {
+                    component: "Avatar",
+                    props: {
+                      src: {
+                        code: '"…" /* inline SVG data-URI built from tokens — see components/gallery/avatar-fixtures.ts */',
+                        value: AVATAR_DEMO_IMAGES.camille,
+                      },
+                      name: labels.dataTableRow1Name,
+                      size,
+                    },
+                  },
+                }),
+              ),
+              // No `src` — the initials fallback. Both examples here are
+              // INFORMATIONAL (no adjacent visible name, so no
+              // `decorative`): this is the "porteur d'information" half of
+              // the AC, its accessible name read straight from the AX
+              // tree. Contrast the "Utilisateurs" block's avatar column
+              // (data-table-users-demo.tsx), which sits next to the row's
+              // own visible name and is `decorative` for exactly that
+              // reason — see Avatar's own doc comment for the two states.
+              {
+                snippet: {
+                  component: "Avatar",
+                  props: { name: labels.dataTableRow3Name },
+                },
+              },
+            ]}
+          />
+        </div>
+      </PrimitiveGroup>
+
       <PrimitiveGroup name="Card / StatCard">
         <ExampleGrid
           labels={exampleLabels}
@@ -318,15 +399,12 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
                     },
                   }),
                 ),
-                ...Object.keys(cardPads).map(
-                  (pad): GroupItem => ({
-                    snippet: {
-                      component: "Card",
-                      props: { pad, className: "space-y-2" },
-                      children: cardExampleChildren(pad, false, labels),
-                    },
-                  }),
-                ),
+                // T2 (s18-ui-kit-polish, annotation `mtlqwiur9l4`) — `pad`
+                // used to get its own three-item demo here (sm/md/lg,
+                // otherwise identical content). Removed: see
+                // card-pad-demo.test.ts's header for the full decision.
+                // `pad` stays fully documented in the props table below
+                // (docs/design-system.md's Card row).
               ],
             },
             {
@@ -766,8 +844,16 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
             component: "DataTable",
             props: {
               caption: labels.dataTableCaption,
+              // T5 (s18-ui-kit-polish, annotation `mtlqxys25i7`) — 3
+              // columns (all text) wasn't enough width to force horizontal
+              // scroll, and not enough TYPES to show sort behaving
+              // differently per type. `signups` (number), `joinedDate`
+              // (date-shaped string — ISO, so plain string sort already
+              // orders it correctly, see data-table.tsx's `compareValues`)
+              // and `plan` (status-shaped text) round that out to 6
+              // columns, 5 of them sortable.
               columns: {
-                code: `[{ key: "name", header: "${labels.dataTableColumnName}", sortable: true }, { key: "email", header: "${labels.dataTableColumnEmail}" }, { key: "role", header: "${labels.dataTableColumnRole}", sortable: true }]`,
+                code: `[{ key: "name", header: "${labels.dataTableColumnName}", sortable: true }, { key: "email", header: "${labels.dataTableColumnEmail}" }, { key: "role", header: "${labels.dataTableColumnRole}", sortable: true }, { key: "signups", header: "${labels.dataTableColumnSignups}", sortable: true, align: "end" }, { key: "joinedDate", header: "${labels.dataTableColumnJoined}", sortable: true }, { key: "plan", header: "${labels.dataTableColumnPlan}", sortable: true }]`,
                 value: [
                   {
                     key: "name",
@@ -780,34 +866,62 @@ export function PrimitivesSection({ labels }: { labels: PrimitivesLabels }) {
                     header: labels.dataTableColumnRole,
                     sortable: true,
                   },
-                ],
+                  {
+                    key: "signups",
+                    header: labels.dataTableColumnSignups,
+                    sortable: true,
+                    align: "end",
+                  },
+                  {
+                    key: "joinedDate",
+                    header: labels.dataTableColumnJoined,
+                    sortable: true,
+                  },
+                  {
+                    key: "plan",
+                    header: labels.dataTableColumnPlan,
+                    sortable: true,
+                  },
+                ] satisfies Column<DataTableDemoRow>[],
               },
               rows: {
-                code: `[{ id: "1", name: "${labels.dataTableRow1Name}", email: "${labels.dataTableRow1Email}", role: "${labels.dataTableRow1Role}" }, /* … */]`,
+                code: `[{ id: "1", name: "${labels.dataTableRow1Name}", email: "${labels.dataTableRow1Email}", role: "${labels.dataTableRow1Role}", signups: 182, joinedDate: "2022-03-14", plan: "${labels.dataTableRow1Plan}" }, /* … */]`,
                 value: [
                   {
                     id: "1",
                     name: labels.dataTableRow1Name,
                     email: labels.dataTableRow1Email,
                     role: labels.dataTableRow1Role,
+                    signups: 182,
+                    joinedDate: "2022-03-14",
+                    plan: labels.dataTableRow1Plan,
                   },
                   {
                     id: "2",
                     name: labels.dataTableRow2Name,
                     email: labels.dataTableRow2Email,
                     role: labels.dataTableRow2Role,
+                    signups: 47,
+                    joinedDate: "2023-11-02",
+                    plan: labels.dataTableRow2Plan,
                   },
                   {
                     id: "3",
                     name: labels.dataTableRow3Name,
                     email: labels.dataTableRow3Email,
                     role: labels.dataTableRow3Role,
+                    signups: 310,
+                    joinedDate: "2021-07-30",
+                    plan: labels.dataTableRow3Plan,
                   },
                   {
                     id: "4",
                     name: labels.dataTableRow4Name,
                     email: labels.dataTableRow4Email,
                     role: labels.dataTableRow4Role,
+                    signups: 9,
+                    joinedDate: "2024-01-19",
+                    plan: labels.dataTableRow4Plan,
                   },
                 ],
               },
